@@ -1,0 +1,39 @@
+## Interface: 120105
+## Title: OnlyBars
+## Notes: Extra action bars. Nothing else.
+## Notes-esMX: Barras de acción extra. Nada más.
+## Notes-esES: Barras de acción extra. Nada más.
+## Author: iAthVo_Kr
+## Version: 0.10.1
+## SavedVariables: OnlyBarsDB
+## IconTexture: Interface\Icons\INV_Misc_Gear_01
+
+# Strings / Textos
+Locales\esMX.lua
+
+# Core / Núcleo
+Core\Init.lua
+Core\Util.lua
+Core\Log.lua
+Core\DB.lua
+Core\Settings.lua
+Core\Combat.lua
+
+# Bars / Barras
+Modules\Buttons.lua
+Modules\Bars.lua
+Modules\Visibility.lua
+Modules\Grid.lua
+Modules\Keybinds.lua
+Modules\EditMode.lua
+Modules\Modes.lua
+
+# Interface / Interfaz
+UI\Style.lua
+UI\Widgets.lua
+UI\Report.lua
+UI\BarDialog.lua
+UI\Panel.lua
+
+# Commands / Comandos
+Core\Commands.lua
