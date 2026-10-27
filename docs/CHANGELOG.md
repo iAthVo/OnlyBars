@@ -1,5 +1,10 @@
 # OnlyBars — Changelog
 
+## 0.11.1 — 2026-10-27
+
+- 🇲🇽 Descarga más ligera: el paquete ya no incluye capturas de pantalla.
+- 🇺🇸 Smaller download: the package no longer includes screenshots.
+
 ## 0.11.0 — 2026-10-27
 
 **Primera versión pública.** · **First public release.**

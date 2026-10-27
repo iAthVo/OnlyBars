@@ -4,7 +4,7 @@
 ## Notes-esMX: Barras de acción extra. Nada más.
 ## Notes-esES: Barras de acción extra. Nada más.
 ## Author: iAthVo_Kr
-## Version: 0.11.0
+## Version: 0.11.1
 ## SavedVariables: OnlyBarsDB
 ## IconTexture: Interface\Icons\INV_Misc_Gear_01
 ## X-Curse-Project-ID: 1769762

@@ -11,6 +11,7 @@ ignore:
   - .pkgmeta
   - .github
   - .gitignore
+  - media
 
 manual-changelog:
   filename: docs/CHANGELOG.md
