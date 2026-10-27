@@ -24,6 +24,7 @@ local frame = CreateFrame("Frame")
 local handlers = {}
 ns.missingEvents = {}
 
+-- Listens to a game event; false if this client does not have it / Escucha un evento del juego; false si este cliente no lo tiene
 function ns:On(event, fn)
 	if not handlers[event] then
 		if not pcall(frame.RegisterEvent, frame, event) then

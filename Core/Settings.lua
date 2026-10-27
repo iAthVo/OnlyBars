@@ -13,10 +13,12 @@ local L = ns.L
 local Settings = {}
 ns.Settings = Settings
 
+-- 0.8 -> "80%"
 local function Percent(value)
 	return ("%d%%"):format(math.floor(value * 100 + 0.5))
 end
 
+-- A whole number as text / Un número entero como texto
 local function Plain(value)
 	return tostring(math.floor(value + 0.5))
 end

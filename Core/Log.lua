@@ -28,12 +28,14 @@ function Log:Init()
 	self:Trim()
 end
 
+-- Keeps only the newest entries / Conserva solo las entradas más nuevas
 function Log:Trim()
 	for i = #self.entries, MAX_ENTRIES + 1, -1 do
 		self.entries[i] = nil
 	end
 end
 
+-- Logs an entry; a repeated one only counts up / Registra una entrada; una repetida solo suma
 function Log:Add(kind, text, stack)
 	local now = date("%Y-%m-%d %H:%M:%S")
 	for _, entry in ipairs(self.entries) do
@@ -60,12 +62,14 @@ function Log:Add(kind, text, stack)
 	self:Changed()
 end
 
+-- Empties the log (Report window button) / Vacía el registro (botón de la ventana de Reporte)
 function Log:Clear()
 	wipe(self.entries)
 	self.notified = nil
 	self:Changed()
 end
 
+-- Refreshes the Report window if it is open / Actualiza la ventana de Reporte si está abierta
 function Log:Changed()
 	if ns.Report then ns.Report:RefreshIfShown() end
 end
@@ -86,15 +90,18 @@ local function ShortStack()
 	return table.concat(lines, "\n")
 end
 
+-- Logs the error, then passes it to the game's handler / Registra el error y luego lo pasa al manejador del juego
 local function OnError(err)
 	Log:Add(L.LOG_KIND_LUA, tostring(err), ShortStack())
 	return geterrorhandler()(err)
 end
 
+-- Runs fn catching its errors / Corre fn atrapando sus errores
 function Log.Call(fn, ...)
 	return xpcall(fn, OnError, ...)
 end
 
+-- fn wrapped with Log.Call, for scripts and events / fn envuelta con Log.Call, para scripts y eventos
 function Log.Wrap(fn)
 	return function(...)
 		Log.Call(fn, ...)
@@ -115,6 +122,7 @@ ns:On("ADDON_ACTION_FORBIDDEN", OnBlocked)
 ---------------------------------------------------------------------------
 local DIAG_KEYS = { "cooldown", "charges", "itemcd", "usable", "range", "glow" }
 
+-- Diagnostic lines for /ob prueba and the report / Líneas de diagnóstico para /ob prueba y el reporte
 function Log:DiagLines()
 	local lines = {}
 	for _, key in ipairs(DIAG_KEYS) do
@@ -149,12 +157,14 @@ function Log:DiagLines()
 	return lines
 end
 
+-- "Name (id)" of a spell, safe with secret values / "Nombre (id)" de un hechizo, seguro con valores secretos
 local function SpellLabel(spellID)
 	if U.IsSecret(spellID) then return L.DIAG_SECRET end
 	if not spellID then return L.REPORT_NO_SPELL end
 	return ("%s (%d)"):format(C_Spell.GetSpellName(spellID) or "?", spellID)
 end
 
+-- An item's details for the report / El detalle de un objeto para el reporte
 local function ItemLabel(itemID)
 	if not itemID then return "?" end
 	return L.REPORT_ITEM_DETAIL:format(C_Item.GetItemNameByID(itemID) or itemID, itemID,
@@ -224,6 +234,7 @@ function Log:ContentLines()
 	return lines
 end
 
+-- The whole report as copyable text / Todo el reporte como texto copiable
 function Log:ReportText()
 	local version, build = GetBuildInfo()
 	local out = {

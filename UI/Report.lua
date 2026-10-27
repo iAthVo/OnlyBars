@@ -13,6 +13,7 @@ ns.Report = Report
 
 local WIDTH, HEIGHT = 640, 420
 
+-- Builds the window: hint, text box and buttons / Arma la ventana: aviso, caja de texto y botones
 local function Create()
 	local f = Style.Window("OnlyBarsReport", L.REPORT_TITLE, WIDTH, HEIGHT)
 
@@ -59,12 +60,14 @@ local function Create()
 	return f
 end
 
+-- Fills it with the current report / La llena con el reporte actual
 function Report:Refresh()
 	if not self.frame then return end
 	self.frame.edit:SetText(ns.Log:ReportText())
 	self.frame.edit:SetCursorPosition(0)
 end
 
+-- Refreshes only if shown / Actualiza solo si se ve
 function Report:RefreshIfShown()
 	if self.frame and self.frame:IsShown() then self:Refresh() end
 end
@@ -73,11 +76,13 @@ end
 -- Presionar Shift/Ctrl/Alt actualiza el reporte, para ver qué leen las macros en vivo (D-46).
 ns:On("MODIFIER_STATE_CHANGED", function() Report:RefreshIfShown() end)
 
+-- Opens it / La abre
 function Report:Show()
 	self.frame = self.frame or Create()
 	self.frame:Show()
 end
 
+-- /ob errores opens or closes it / /ob errores la abre o la cierra
 function Report:Toggle()
 	if self.frame and self.frame:IsShown() then
 		self.frame:Hide()

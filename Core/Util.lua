@@ -13,6 +13,7 @@ ns.U = U
 
 U.ACCENT = { 0.31, 0.76, 0.97 }
 
+-- Prints to chat with the OnlyBars prefix / Escribe en el chat con el prefijo de OnlyBars
 function U.Print(msg, ...)
 	if select("#", ...) > 0 then
 		msg = msg:format(...)
@@ -20,10 +21,12 @@ function U.Print(msg, ...)
 	DEFAULT_CHAT_FRAME:AddMessage(L.PREFIX .. " " .. msg)
 end
 
+-- value kept between low and high / value dentro de low y high
 function U.Clamp(value, low, high)
 	return math.max(low, math.min(high, value))
 end
 
+-- Nearest whole number / Entero más cercano
 function U.Round(value)
 	return math.floor(value + 0.5)
 end
@@ -44,10 +47,12 @@ end
 ---------------------------------------------------------------------------
 local issecretvalue = issecretvalue
 
+-- Is this a Midnight secret value? / ¿Es un valor secreto de Midnight?
 function U.IsSecret(value)
 	return issecretvalue ~= nil and issecretvalue(value) or false
 end
 
+-- Does the character know the spell (or its override)? / ¿El personaje conoce el hechizo (o su reemplazo)?
 function U.IsSpellKnown(spellID)
 	if IsPlayerSpell and IsPlayerSpell(spellID) then return true end
 	if IsSpellKnownOrOverridesKnown and IsSpellKnownOrOverridesKnown(spellID) then return true end
@@ -64,6 +69,7 @@ function U.Border(parent, size, r, g, b, a)
 	f:SetPoint("TOPLEFT", -size, size)
 	f:SetPoint("BOTTOMRIGHT", size, -size)
 
+	-- One edge texture / Una textura de borde
 	local function Edge(from, to, isVertical)
 		local t = f:CreateTexture(nil, "OVERLAY")
 		t:SetColorTexture(r, g, b, a)
@@ -109,6 +115,7 @@ function U.NoteEmpty(key)
 	U.NoteState(key, L.DIAG_EMPTY)
 end
 
+-- Counts an answer, split by in or out of combat / Cuenta una respuesta, separada por dentro o fuera de combate
 function U.NoteState(key, state)
 	local context = InCombatLockdown() and L.DIAG_COMBAT or L.DIAG_IDLE
 	local entry = ns.Diag[key] or {}

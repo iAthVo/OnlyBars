@@ -14,10 +14,12 @@ local L, U = ns.L, ns.U
 local Modes = {}
 ns.Modes = Modes
 
+-- Are the bars in free mode? / ¿Las barras están en modo libre?
 function Modes:IsFree()
 	return ns.DB.db ~= nil and not ns.DB.db.settings.locked
 end
 
+-- Free or locked mode; free mode closes key assignment (D-58) / Modo libre o bloqueado; el libre cierra la asignación de teclas (D-58)
 function Modes:SetFree(free, silent)
 	if free and InCombatLockdown() then
 		U.Print(L.COMBAT_BLOCKED)
@@ -34,6 +36,7 @@ function Modes:SetFree(free, silent)
 	end
 end
 
+-- Selection, grid and bars as the current mode says / Selección, rejilla y barras según el modo actual
 function Modes:Apply()
 	ns.EditMode:Show(self:IsFree())
 	ns.Grid:Show(self:IsFree())

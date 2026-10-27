@@ -29,12 +29,14 @@ local function CreateFallbackSelection(f)
 	local label = sel:CreateFontString(nil, "OVERLAY", "OnlyBarsFontHighlight")   -- UI/Style.lua (0.10.1)
 	label:SetPoint("CENTER")
 
+	-- Like Blizzard: highlighted, not selected / Como Blizzard: resaltada, sin seleccionar
 	function sel:ShowHighlighted()
 		self.isSelected = false
 		fill:SetAlpha(0.5)
 		label:SetText(self.system:GetSystemName())
 		self:Show()
 	end
+	-- Like Blizzard: selected / Como Blizzard: seleccionada
 	function sel:ShowSelected()
 		self.isSelected = true
 		fill:SetAlpha(1)
@@ -44,6 +46,7 @@ local function CreateFallbackSelection(f)
 	return sel
 end
 
+-- A click selects the bar / Un clic selecciona la barra
 local function OnMouseDown(sel)
 	if InCombatLockdown() then return end
 	EditMode:Select(sel.parent)
@@ -57,10 +60,12 @@ local function OnDragStart(sel)
 	ns.Grid:BeginDrag(sel.parent)
 end
 
+-- Dropping ends OnlyBars' own drag / Soltar termina el arrastre propio de OnlyBars
 local function OnDragStop()
 	ns.Grid:EndDrag()
 end
 
+-- Adds the selection overlay to a bar frame / Agrega la capa de selección al marco de una barra
 function EditMode:Attach(f)
 	local ok, sel = pcall(CreateFrame, "Frame", nil, f, "EditModeSystemSelectionTemplate")
 	if not ok or not sel.ShowHighlighted then
@@ -100,6 +105,7 @@ function EditMode:Select(f)
 	ns.BarDialog:Open(f)
 end
 
+-- Nothing selected; the dialog closes / Nada seleccionado; la ventana se cierra
 function EditMode:Deselect()
 	self.selected = nil
 	for frame in pairs(self.frames) do
@@ -166,6 +172,7 @@ function EditMode:HookBlizzard()
 	end
 end
 
+-- Clears Blizzard's selection (D-24) / Quita la selección de Blizzard (D-24)
 function EditMode:ClearBlizzardSelection()
 	if EditModeManagerFrame and EditModeManagerFrame.ClearSelectedSystem and EditModeManagerFrame:IsShown() then
 		self.clearing = true

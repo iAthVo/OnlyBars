@@ -37,6 +37,7 @@ local SHORT = {
 	{ "HOME", "Hm" }, { "END", "End" }, { "BACKSPACE", "Bs" }, { "CAPSLOCK", "Cap" },
 }
 
+-- "SHIFT-1" -> "s1" for the button / "SHIFT-1" -> "s1" para el botón
 function Keybinds.Abbreviate(key)
 	if not key then return "" end
 	for _, pair in ipairs(SHORT) do
@@ -50,6 +51,7 @@ function Keybinds.Readable(key)
 	return (key:gsub("ALT%-", "Alt+"):gsub("CTRL%-", "Ctrl+"):gsub("SHIFT%-", "Shift+"))
 end
 
+-- The key with the modifiers held now: "CTRL-SHIFT-Q" / La tecla con los modificadores presionados: "CTRL-SHIFT-Q"
 local function Compose(key)
 	return (IsAltKeyDown() and "ALT-" or "") .. (IsControlKeyDown() and "CTRL-" or "")
 		.. (IsShiftKeyDown() and "SHIFT-" or "") .. key
@@ -93,6 +95,7 @@ local function Shareable(f, owners)
 	return true
 end
 
+-- The owners as text: "Bar 9, button 3, …" / Los dueños como texto: "Barra 9, botón 3, …"
 local function Where(owners)
 	local list = {}
 	for _, owner in ipairs(owners) do
@@ -101,6 +104,7 @@ local function Where(owners)
 	return table.concat(list, ", ")
 end
 
+-- The owners' bar names, for messages / Los nombres de las barras dueñas, para mensajes
 local function BarNames(owners)
 	local list = {}
 	for _, owner in ipairs(owners) do
@@ -109,11 +113,13 @@ local function BarNames(owners)
 	return table.concat(list, ", ")
 end
 
+-- Re-applies a bar's keys and redraws their texts / Vuelve a aplicar las teclas de una barra y redibuja sus textos
 local function Refresh(f)
 	ns.Combat:Run("visibility", function() ns.Visibility:Apply(f) end, true)
 	for _, b in ipairs(f.buttons) do b:UpdateHotkey() end
 end
 
+-- Saves the key on the button / Guarda la tecla en el botón
 function Keybinds:Set(b, key)
 	KeysOf(b.bar)[b.index] = key
 	Refresh(b.bar)
@@ -126,6 +132,7 @@ function Keybinds:Set(b, key)
 	end
 end
 
+-- Removes the button's key / Quita la tecla del botón
 function Keybinds:Clear(b)
 	local keys = KeysOf(b.bar)
 	if not keys[b.index] then return end
@@ -162,6 +169,7 @@ function Keybinds:Assign(b, key)
 	end
 end
 
+-- Popup: take the key from its owners and give it to this button / Ventana: quitarle la tecla a sus dueños y dársela a este botón
 local function Move(_, move)
 	for _, owner in ipairs(move.owners) do
 		KeysOf(owner.bar)[owner.index] = nil
@@ -170,6 +178,7 @@ local function Move(_, move)
 	Keybinds:Set(move.button, move.key)
 end
 
+-- Popup: keep the key on both bars (D-59) / Ventana: dejar la tecla en las dos barras (D-59)
 local function Share(_, move)
 	Keybinds:Set(move.button, move.key)
 	U.Print(L.KEY_SHARED, Keybinds.Readable(move.key), BarNames(move.owners))
@@ -294,6 +303,7 @@ function Keybinds:PlaceBanner()
 	banner.text:SetWidth(banner:GetWidth() - 20)
 end
 
+-- The notice with "Done", and the frame that catches the keyboard / El aviso con "Listo", y el marco que atrapa el teclado
 local function CreateBanner()
 	local banner = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	ns.Style.Flat(banner)
@@ -316,6 +326,7 @@ local function CreateBanner()
 	return banner
 end
 
+-- Is the assignment mode open? / ¿Está abierto el modo de asignación?
 function Keybinds:IsActive()
 	return self.active == true
 end
@@ -331,6 +342,7 @@ local function ShowAll()
 	end
 end
 
+-- Opens the mode: every bar of this spec shows, with an overlay on each button / Abre el modo: se ven las barras de esta spec, con una capa en cada botón
 function Keybinds:Start(fromBlizzard)
 	if self.active then return end
 	if InCombatLockdown() then
@@ -354,6 +366,7 @@ function Keybinds:Start(fromBlizzard)
 	U.Print(L.KEY_MODE_ON)
 end
 
+-- Closes the mode and restores the bars / Cierra el modo y regresa las barras
 function Keybinds:Stop()
 	if not self.active then return end
 	self.active, self.hovered = false, nil
@@ -367,6 +380,7 @@ function Keybinds:Stop()
 	U.Print(L.KEY_MODE_OFF)
 end
 
+-- /ob teclas and the panel button / /ob teclas y el botón del panel
 function Keybinds:Toggle()
 	if self.active then self:Stop() else self:Start() end
 end

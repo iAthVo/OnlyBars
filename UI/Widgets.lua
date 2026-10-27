@@ -52,6 +52,7 @@ function W.SliderRow(parent, def, width, labelWidth, onChange)
 		if not row.loading then ns.Log.Call(onChange, value) end
 	end, row)
 
+	-- Shows a value without calling onChange / Muestra un valor sin llamar onChange
 	function row:Load(value)
 		self.loading = true
 		local steps = math.floor((def.max - def.min) / def.step + 0.5)
@@ -86,6 +87,7 @@ function W.Check(parent, text, width, onClick)
 		onClick(self:GetChecked() and true or false, row)
 	end))
 
+	-- Shows the check without calling onClick / Muestra la casilla sin llamar onClick
 	function row:Load(value) check:SetChecked(value and true or false) end
 
 	-- Greyed out and not usable when disabled / En gris y sin poder usarse cuando está deshabilitado
@@ -103,6 +105,7 @@ function W.Cycle(parent, def, width, onChange)
 	button:SetHeight(24)
 	local current
 
+	-- Shows "Label: option" for the value / Muestra "Etiqueta: opción" para el valor
 	local function Show(value)
 		current = value
 		for _, option in ipairs(def.options) do

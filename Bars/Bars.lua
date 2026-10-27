@@ -48,6 +48,7 @@ local ANCHOR_POINTS = {
 	left = { "TOPRIGHT", "TOPLEFT" },
 }
 
+-- x, y of a corner (TOPLEFT…) of a rect / x, y de una esquina (TOPLEFT…) de un rectángulo
 local function PointOf(rect, point)
 	local x = point:find("LEFT") and rect.left or rect.right
 	local y = point:find("TOP") and rect.top or rect.bottom
@@ -112,6 +113,7 @@ function Bars:Detach(f)
 	self:Place(f)
 end
 
+-- Puts the bar where its layout says: on its anchor, or at x, y from the centre / Pone la barra donde dice su forma: en su anclaje, o en x, y desde el centro
 function Bars:Place(f)
 	local layout = f.layout
 	local scale = layout.iconSize
@@ -142,6 +144,7 @@ function Bars:Nudge(f, dx, dy)
 	self:Place(f)
 end
 
+-- Back to the screen centre, unanchored (out of combat) / De regreso al centro de la pantalla, sin anclar (fuera de combate)
 function Bars:ResetPosition(f)
 	if InCombatLockdown() then return end
 	f.layout.anchor = nil
@@ -222,6 +225,7 @@ function Bars:Build(data)
 	ns.Visibility:Apply(f)
 end
 
+-- Empties and hides the frame of a bar that no longer exists / Vacía y oculta el marco de una barra que ya no existe
 function Bars:Release(f)
 	for _, b in ipairs(f.buttons) do
 		b:ApplySlot(nil)
@@ -232,6 +236,7 @@ function Bars:Release(f)
 	f.data, f.layout = nil, nil
 end
 
+-- Builds every bar of this character and frees the unused frames / Construye todas las barras del personaje y libera los marcos que sobran
 function Bars:BuildAll()
 	local bars = ns.DB:Bars()
 	for id, f in pairs(self.frames) do
@@ -275,6 +280,7 @@ function Bars:Create()
 	end)
 end
 
+-- Deletes a bar and frees the bars anchored to it / Borra una barra y suelta las que estaban ancladas a ella
 function Bars:Delete(id)
 	ns.Combat:Run("delete" .. id, function()
 		local data = ns.DB:Bars()[id]
@@ -295,6 +301,7 @@ function Bars:Delete(id)
 	end)
 end
 
+-- A copy with its own number; from another spec it lands in this one (D-60) / Una copia con su propio número; de otra spec llega a esta (D-60)
 function Bars:Duplicate(data)
 	ns.Combat:Run("duplicate" .. data.id, function()
 		local copy = ns.DB:DuplicateBar(data)
@@ -349,6 +356,7 @@ function Bars:Rename(data, name)
 	self:Changed()
 end
 
+-- The list's check: shows or hides the bar / La palomita de la lista: muestra u oculta la barra
 function Bars:SetHidden(data, hidden)
 	data.hidden = hidden
 	ns.Combat:Run("visibility", function() ns.Visibility:ApplyAll() end)
@@ -403,6 +411,7 @@ function Bars:ToggleScope(data)
 	self:SetScope(data, data.scope == "global" and "spec" or "global")
 end
 
+-- General <-> Per spec, nothing is lost (D-27, D-60) / General <-> Por spec, sin perder nada (D-27, D-60)
 function Bars:SetScope(data, scope)
 	ns.Combat:Run("scope" .. data.id, function()
 		ns.DB:SetScope(data, scope)

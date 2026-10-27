@@ -90,6 +90,7 @@ function Visibility:Locations()
 	return here
 end
 
+-- Is that equipment set worn now? / ¿Ese conjunto de equipo está puesto ahora?
 local function IsSetEquipped(name)
 	local setID = C_EquipmentSet.GetEquipmentSetID(name)
 	if not setID then return false end
@@ -107,6 +108,7 @@ local function AnyHolds(marked, holds)
 	return false
 end
 
+-- Location, spec and equipment: may the bar show here? (checked in Lua) / Ubicación, spec y equipo: ¿la barra se puede ver aquí? (se revisa en Lua)
 function Visibility:Allowed(data, vis)
 	-- A Per-spec bar only shows in its checked specs (D-54, D-60).
 	-- Una barra por spec solo se ve en sus specs marcadas (D-54, D-60).
@@ -135,6 +137,7 @@ local TARGET_HIDES = {
 	help = "[@target,nohelp] hide",
 }
 
+-- The macro-condition string for the secure state driver / La cadena de condiciones de macro para el controlador seguro
 function Visibility:Driver(vis)
 	local parts = {}
 	if vis.hideVehicle then
@@ -186,6 +189,7 @@ for _, key in ipairs({ "dungeon", "raid", "delve", "battleground", "arena" }) do
 	PLACES[#PLACES + 1] = { [key] = true, rest = true }
 end
 
+-- Does the bar use "Mostrar solo si…"? / ¿La barra usa "Mostrar solo si…"?
 local function HasExceptions(vis)
 	return next(vis.showIf) ~= nil
 end
@@ -200,6 +204,7 @@ function Visibility:UsesState(vis)
 	return vis.combat == "in" or vis.combat == "out" or vis.group
 end
 
+-- Has any "Mostrar solo si…" check marked / Tiene marcada alguna casilla de "Mostrar solo si…"
 function Visibility:UsesShowIf(vis)
 	return next(vis.showIf) ~= nil
 end
@@ -213,10 +218,12 @@ local function Guaranteed(vis)
 	return combat, mounted
 end
 
+-- Two guaranteed states that can never hold together / Dos estados garantizados que nunca se cumplen juntos
 local function Differ(a, b)
 	return a ~= nil and b ~= nil and a ~= b
 end
 
+-- Can these two bars be active at the same time? (D-59) / ¿Pueden estas dos barras estar activas al mismo tiempo? (D-59)
 function Visibility:CanOverlap(da, db)
 	if da.hidden or db.hidden then return false end
 	local sa, sb = ns.DB:ActiveSet(da), ns.DB:ActiveSet(db)
@@ -270,12 +277,14 @@ function Visibility:Apply(f)
 	self:Fade(f)
 end
 
+-- Apply on every bar / Aplica en cada barra
 function Visibility:ApplyAll()
 	for _, f in pairs(ns.Bars.frames) do
 		if f.data then self:Apply(f) end
 	end
 end
 
+-- Stops a bar's driver and keys when its frame is freed / Detiene el controlador y las teclas de una barra al liberar su marco
 function Visibility:Release(f)
 	UnregisterStateDriver(f, "obvis")
 	ClearOverrideBindings(f)
@@ -308,6 +317,7 @@ function Visibility:Fade(f)
 end
 
 local fadeTimer
+-- Checks the mouse over faded bars 10 times a second / Revisa el mouse sobre las barras desvanecidas 10 veces por segundo
 function Visibility:StartFadeTimer()
 	if fadeTimer then return end
 	fadeTimer = C_Timer.NewTicker(0.1, ns.Log.Wrap(function()

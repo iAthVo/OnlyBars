@@ -32,15 +32,18 @@ function Grid:Settings()
 	return settings.grid
 end
 
+-- Magnetism on or off (panel footer) / Magnetismo sí o no (pie del panel)
 function Grid:SetMagnet(enabled)
 	self:Settings().magnet = enabled and true or false
 end
 
+-- Grid on or off / Rejilla sí o no
 function Grid:SetEnabled(enabled)
 	self:Settings().enabled = enabled and true or false
 	self:Show(ns.Modes:IsFree())
 end
 
+-- Grid size, in steps of 5 px / Tamaño de la rejilla, de 5 en 5 px
 function Grid:SetSize(size)
 	size = math.floor(size / self.STEP + 0.5) * self.STEP
 	self:Settings().size = U.Clamp(size, self.MIN, self.MAX)
@@ -62,6 +65,7 @@ local function Line(index)
 	return line
 end
 
+-- Draws the grid lines from the screen centre / Dibuja las líneas de la rejilla desde el centro
 function Grid:Draw()
 	local f = self.frame
 	local size = self:Settings().size
@@ -71,6 +75,7 @@ function Grid:Draw()
 	local r, g, b = unpack(U.ACCENT)
 	local count = 0
 
+	-- One line; the centre ones in the accent colour / Una línea; las del centro en color de acento
 	local function Add(isVertical, offset, isCentre)
 		count = count + 1
 		local line = Line(count)
@@ -147,6 +152,7 @@ local BLIZZARD_BARS = {
 	"StanceBar", "PetActionBar",
 }
 
+-- A frame's edges as offsets from the screen centre (UIParent units) / Los bordes de un marco como distancia al centro (unidades de UIParent)
 local function Rect(frame)
 	local left, right, top, bottom = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
 	if not (left and right and top and bottom) then return nil end
@@ -184,6 +190,7 @@ end
 -- acción 1 de Blizzard, leídos al crear una barra (D-40). Nil si no se puede medir.
 local MAIN_BARS = { "MainActionBar", "MainMenuBar" }
 
+-- Measures Blizzard's bar 1 / Mide la barra 1 de Blizzard
 function Grid:BlizzardBar()
 	for _, name in ipairs(MAIN_BARS) do
 		local bar = _G[name]
@@ -214,6 +221,7 @@ function Grid:JoinGap(f)
 	return layout.spacing * f:GetScale()
 end
 
+-- Shortcut to Grid:JoinGap / Atajo a Grid:JoinGap
 local function JoinGap(f)
 	return Grid:JoinGap(f)
 end
@@ -375,6 +383,7 @@ local function Cursor()
 	return cx / scale - UIParent:GetWidth() / 2, cy / scale - UIParent:GetHeight() / 2
 end
 
+-- The two red guide lines, created once / Las dos líneas guía rojas, creadas una vez
 local function Guides()
 	if not Grid.guides then
 		local frame = CreateFrame("Frame", nil, UIParent)
@@ -390,6 +399,7 @@ local function Guides()
 	return Grid.guides
 end
 
+-- Shows a guide on each axis that stuck / Muestra una guía en cada eje que se pegó
 function Grid:ShowGuides(lineX, lineY)
 	local g = Guides()
 	local thickness = 2 / UIParent:GetEffectiveScale()
@@ -410,10 +420,12 @@ function Grid:ShowGuides(lineX, lineY)
 	g.frame:Show()
 end
 
+-- Hides the guides / Oculta las guías
 function Grid:HideGuides()
 	if self.guides then self.guides.frame:Hide() end
 end
 
+-- Starts OnlyBars' own drag of a bar / Empieza el arrastre propio de una barra
 function Grid:BeginDrag(f)
 	if InCombatLockdown() or not f.layout then return end
 	-- Dragging frees an anchored bar; dropping it may anchor it again (D-47).
@@ -429,6 +441,7 @@ function Grid:BeginDrag(f)
 	self.driver:SetScript("OnUpdate", ns.Log.Wrap(function() Grid:UpdateDrag() end))
 end
 
+-- Each frame: follow the cursor, then magnetism and grid / En cada cuadro: seguir el cursor, luego imán y rejilla
 function Grid:UpdateDrag()
 	local drag = self.dragging
 	if not drag then return end
@@ -448,6 +461,7 @@ function Grid:UpdateDrag()
 	self:ShowGuides(lineX, lineY)
 end
 
+-- Drops the bar, rounds its position and anchors it if it touches another / Suelta la barra, redondea su posición y la ancla si toca otra
 function Grid:EndDrag()
 	local drag = self.dragging
 	if not drag then return end
@@ -478,6 +492,7 @@ end
 ---------------------------------------------------------------------------
 local TOUCH = 2
 
+-- Do two ranges overlap? / ¿Se cruzan dos rangos?
 local function Overlap(lowA, highA, lowB, highB)
 	return math.min(highA, highB) - math.max(lowA, lowB) > 0
 end

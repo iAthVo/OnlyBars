@@ -47,6 +47,7 @@ local FLAT = {
 	edgeSize = 1,
 }
 
+-- Flat dark backdrop with a black border / Fondo plano oscuro con borde negro
 function Style.Flat(frame, color)
 	color = color or Style.BG
 	frame:SetBackdrop(FLAT)

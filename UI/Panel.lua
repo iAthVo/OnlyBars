@@ -59,6 +59,7 @@ local function MoveSelected(delta)
 	Panel:Refresh()
 end
 
+-- This character's bar numbers, to find the new one after creating / Los números de las barras, para hallar la nueva al crear
 local function IDs()
 	local ids = {}
 	for id in pairs(ns.DB:Bars()) do ids[id] = true end
@@ -72,6 +73,7 @@ local function NewID(before)
 	end
 end
 
+-- Equipment set names, sorted / Nombres de los conjuntos de equipo, en orden
 local function SetNames()
 	local names = {}
 	for _, setID in ipairs(C_EquipmentSet.GetEquipmentSetIDs() or {}) do
@@ -133,6 +135,7 @@ local function StoredName(data)
 	return set and set.name or L.BAR_NAME:format(data.id)
 end
 
+-- The bar selected in the list / La barra elegida en la lista
 function Panel:Selected()
 	return self.selectedID and ns.DB:Bars()[self.selectedID]
 end
@@ -182,6 +185,7 @@ local function CreateListRow(parent, index)
 	return row
 end
 
+-- Left column: character name, bar list and action buttons / Columna izquierda: nombre del personaje, lista de barras y botones
 local function CreateList(f)
 	local box = CreateFrame("Frame", nil, f, "BackdropTemplate")
 	box:SetPoint("TOPLEFT", 10, -38)
@@ -215,6 +219,7 @@ local function CreateList(f)
 		f.listRows[i] = CreateListRow(box, i)
 	end
 
+	-- A full-width button under the list / Un botón a lo ancho bajo la lista
 	local function Action(text, offset, onClick)
 		local button = W.FlatButton(f, text, LIST_WIDTH, onClick)
 		button:SetPoint("BOTTOMLEFT", 10, offset)
@@ -259,6 +264,7 @@ local function CreateHeader(f)
 	name:SetPoint("TOPLEFT", RIGHT_X + 6, -46)
 	name:SetAutoFocus(false)
 	name:SetMaxLetters(32)
+	-- Enter saves the name / Enter guarda el nombre
 	local function Commit(self)
 		local data = Panel:Selected()
 		if data and ns.DB:InSpec(data) then ns.Bars:Rename(data, self:GetText()) end
@@ -285,6 +291,7 @@ local function CreateHeader(f)
 	f.otherSpec:SetJustifyH("LEFT")
 
 	f.tabs = {}
+	-- A tab button / Un botón de pestaña
 	local function Tab(key, text, x)
 		local tab = W.FlatButton(f, text, 130, function() Panel:ShowTab(key) end)
 		tab:SetHeight(24)
@@ -306,6 +313,7 @@ local function CreateShapeTab(f)
 
 	local y = 0
 	for _, def in ipairs(ns.Settings.LAYOUT) do
+		-- Saves one layout setting of the selected bar / Guarda un ajuste de forma de la barra elegida
 		local function OnChange(value)
 			local data = Panel:Selected()
 			if not data then return end
@@ -351,6 +359,7 @@ local function CreateShowTab(f)
 	tab:SetPoint("TOPLEFT", RIGHT_X, CONTENT_TOP)
 	tab:SetSize(RIGHT_WIDTH, HEIGHT + CONTENT_TOP - 50)
 
+	-- Saves one situation of the selected bar / Guarda una situación de la barra elegida
 	local function SetVis(key, value, option)
 		local data = Panel:Selected()
 		if data then ns.Bars:SetVisibility(data, key, value, option) end
@@ -532,6 +541,7 @@ local GRID_SIZE = {
 	format = function(value) return L.GRID_PX:format(value) end,
 }
 
+-- Footer: free mode, grid and magnetism / Pie: modo libre, rejilla y magnetismo
 local function CreateFooter(f)
 	f.free = W.FlatButton(f, "", 130, function()
 		ns.Modes:SetFree(not ns.Modes:IsFree())
@@ -564,6 +574,7 @@ end
 ---------------------------------------------------------------------------
 local COPY_WIDTH = LIST_WIDTH + 20
 
+-- A row of the copy list: name, tag and check / Una fila de la lista de copia: nombre, etiqueta y casilla
 local function CreateCopyRow(parent, index)
 	local row = Style.Button(parent, "", LIST_WIDTH - 12)
 	row:SetHeight(LIST_ROW)
@@ -578,6 +589,7 @@ local function CreateCopyRow(parent, index)
 	local check = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
 	check:SetSize(20, 20)
 	check:SetPoint("RIGHT", -2, 0)
+	-- Marks or unmarks the bar to copy / Marca o desmarca la barra a copiar
 	local function Toggle(checked)
 		if not row.data then return end
 		Panel.copyPicked[row.data] = checked or nil
@@ -595,6 +607,7 @@ end
 local function ChooseCharacter(owner)
 	local chars = ns.DB:OtherChars()
 	if #chars == 0 then return end
+	-- Chooses the other character / Elige al otro personaje
 	local function Pick(key)
 		Panel.copyFrom, Panel.copyPicked = key, {}
 		Panel:RefreshCopy()
@@ -617,6 +630,7 @@ local function ChooseCharacter(owner)
 	Pick(chars[index].key)
 end
 
+-- Builds the copy side panel / Arma el panel lateral de copia
 local function CreateCopyPanel(f)
 	local c = CreateFrame("Frame", nil, f, "BackdropTemplate")
 	c:SetPoint("TOPRIGHT", f, "TOPLEFT", -2, 0)
@@ -704,6 +718,7 @@ local function CreateCopyPanel(f)
 	f.copyPanel = c
 end
 
+-- Builds the whole panel, once / Arma todo el panel, una vez
 local function Create()
 	local f = Style.Window("OnlyBarsPanel", L.PANEL_TITLE, WIDTH, HEIGHT)
 	CreateList(f)
@@ -790,6 +805,7 @@ function Panel:RefreshList(f, bars)
 	end
 end
 
+-- Loads the Layout tab from the shown set / Carga la pestaña Forma desde el conjunto mostrado
 function Panel:RefreshShape(f, data)
 	local layout = self:EditedSet(data).layout
 	for _, row in ipairs(f.shapeRows) do
@@ -798,6 +814,7 @@ function Panel:RefreshShape(f, data)
 	end
 end
 
+-- Loads the Show tab: locations, states, specs, sets and checks / Carga la pestaña Mostrar: ubicaciones, estados, specs, conjuntos y casillas
 function Panel:RefreshShow(f, data)
 	local vis = self:EditedSet(data).visibility
 	for _, row in ipairs(f.locationChecks) do
@@ -907,6 +924,7 @@ function Panel:RefreshFooter()
 	end
 end
 
+-- Redraws the list and the selected bar's settings / Redibuja la lista y los ajustes de la barra elegida
 function Panel:Refresh()
 	local f = self.frame
 	if not (f and ns.DB.char) then return end
@@ -942,11 +960,13 @@ end
 ---------------------------------------------------------------------------
 Panel.tab = "shape"
 
+-- Switches between Layout and Show / Cambia entre Forma y Mostrar
 function Panel:ShowTab(key)
 	self.tab = key
 	self:Refresh()
 end
 
+-- Selects a bar in the list / Elige una barra en la lista
 function Panel:Select(id)
 	self.selectedID = id
 	self:Refresh()
@@ -955,6 +975,7 @@ end
 -- Copy from another character (D-67) / Copiar de otro personaje (D-67)
 Panel.copyPicked = {}
 
+-- Opens or closes the copy panel / Abre o cierra el panel de copia
 function Panel:ToggleCopy()
 	local c = self.frame and self.frame.copyPanel
 	if not c then return end
@@ -972,6 +993,7 @@ function Panel:CopySources()
 	return char and SortedBars(char.bars) or {}
 end
 
+-- Redraws the copy panel: character, direction, bars and button / Redibuja el panel de copia: personaje, sentido, barras y botón
 function Panel:RefreshCopy()
 	local c = self.frame and self.frame.copyPanel
 	if not (c and c:IsShown()) then return end
@@ -1021,10 +1043,12 @@ function Panel:ShownKey()
 	if data and not ns.DB:InSpec(data) then return ns.DB:BarSpecs(data)[1] end
 end
 
+-- The set the panel shows / El conjunto que muestra el panel
 function Panel:EditedSet(data)
 	return ns.DB:SetFor(data, self:ShownKey())
 end
 
+-- Opens the panel, on a bar if given / Abre el panel, en una barra si se indica
 function Panel:Show(id)
 	self.frame = self.frame or Create()
 	if id then self.selectedID = id end
@@ -1032,6 +1056,7 @@ function Panel:Show(id)
 	self:Refresh()
 end
 
+-- /ob opens or closes it / /ob lo abre o lo cierra
 function Panel:Toggle()
 	if self.frame and self.frame:IsShown() then
 		self.frame:Hide()
@@ -1040,6 +1065,7 @@ function Panel:Toggle()
 	end
 end
 
+-- Redraws only if open / Redibuja solo si está abierto
 function Panel:RefreshIfOpen()
 	if self.frame and self.frame:IsShown() then self:Refresh() end
 end

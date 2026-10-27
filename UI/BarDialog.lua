@@ -41,11 +41,13 @@ local function OnKeyDown(d, key)
 	end
 end
 
+-- Scope button: General <-> Per spec / Botón de alcance: General <-> Por spec
 local function OnScopeClick()
 	local data = Dialog.bar and Dialog.bar.data
 	if data then ns.Bars:ToggleScope(data) end
 end
 
+-- Builds the dialog from the shared settings model / Arma la ventana desde el modelo único de ajustes
 local function Create()
 	local d = CreateFrame("Frame", "OnlyBarsBarDialog", UIParent)
 	d:SetWidth(WIDTH)
@@ -80,6 +82,7 @@ local function Create()
 	local y = -46
 	d.rows = {}
 	for _, def in ipairs(ns.Settings.LAYOUT) do
+		-- Each row saves through Dialog:Set / Cada fila guarda con Dialog:Set
 		local function OnChange(value) Dialog:Set(def.key, value) end
 		local row
 		if def.kind == "slider" then
@@ -135,6 +138,7 @@ function Dialog:Open(f)
 	self.frame:Show()
 end
 
+-- Hides the dialog / Oculta la ventana
 function Dialog:Close()
 	self.bar = nil
 	if self.frame then self.frame:Hide() end
@@ -154,10 +158,12 @@ function Dialog:Refresh()
 	self.frame.scope:SetText(L.DIALOG_SCOPE:format(scope))
 end
 
+-- Reloads it only if it is open / La recarga solo si está abierta
 function Dialog:RefreshIfOpen()
 	if self.frame and self.frame:IsShown() then self:Refresh() end
 end
 
+-- Saves one setting of the selected bar / Guarda un ajuste de la barra seleccionada
 function Dialog:Set(key, value)
 	local f = self.bar
 	if not (f and f.data) or InCombatLockdown() then return end

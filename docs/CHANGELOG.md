@@ -901,7 +901,7 @@ Z = cambios menores.
 ### Agregado
 - **Ventana "OnlyBars · Reporte"** (`/ob errores`): diagnóstico y errores como texto copiable
   (Ctrl+A, Ctrl+C). Botones: seleccionar todo, limpiar errores y cerrar. Se cierra con Esc.
-- **Registro de errores propio** (`Core/Log.lua`), sin depender de otros addons (D-14):
+- **Registro de errores propio** (`Core/Log.lua`), sin dependencias (D-14):
   - Errores de Lua dentro de OnlyBars, con las primeras líneas de su detalle técnico. También
     siguen al manejador normal de errores.
   - Acciones que el juego bloqueó a OnlyBars (`ADDON_ACTION_BLOCKED` / `FORBIDDEN`).

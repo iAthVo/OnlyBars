@@ -33,17 +33,23 @@ end
 
 local commands = {}
 
+-- /ob ayuda · help: lists the commands / lista los comandos
 function commands.ayuda()
 	for _, line in ipairs(L.HELP) do U.Print(line) end
 end
 
+-- /ob panel
 function commands.panel() ns.Panel:Show() end
+-- /ob teclas · keys: key assignment mode / modo de asignar teclas
 function commands.teclas() ns.Keybinds:Toggle() end
 
+-- /ob libre · free  —  /ob bloquear · lock
 function commands.libre() ns.Modes:SetFree(true) end
 function commands.bloquear() ns.Modes:SetFree(false) end
+-- /ob nueva · new
 function commands.nueva() ns.Bars:Create() end
 
+-- /ob borrar · delete <n>: asks before deleting / pregunta antes de borrar
 function commands.borrar(arg)
 	local data = BarArg(arg)
 	if data then
@@ -62,12 +68,14 @@ local function SetLayoutCommand(key, arg, value)
 	end
 end
 
+-- /ob iconos · icons <n> <count>  —  /ob filas · rows <n> <rows>
 function commands.iconos(arg, value) SetLayoutCommand("buttons", arg, value) end
 function commands.filas(arg, value) SetLayoutCommand("rows", arg, value) end
 -- Old names still work / Los nombres viejos siguen funcionando
 commands.botones = commands.iconos
 commands.fila = commands.filas
 
+-- /ob vacios · empty <n>: toggles empty buttons / alterna los botones vacíos
 function commands.vacios(arg)
 	local data = BarArg(arg)
 	if data then
@@ -77,6 +85,7 @@ function commands.vacios(arg)
 	end
 end
 
+-- /ob alcance · scope <n>: General <-> Per spec / General <-> Por spec
 function commands.alcance(arg)
 	local data = BarArg(arg)
 	if data then ns.Bars:ToggleScope(data) end
@@ -92,6 +101,7 @@ function commands.prueba()
 	ns.Report:Show()
 end
 
+-- /ob errores · errors: Report window / ventana de Reporte
 function commands.errores() ns.Report:Toggle() end
 commands.reporte = commands.errores
 

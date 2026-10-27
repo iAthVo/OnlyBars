@@ -26,6 +26,12 @@ local RED = { 1, 0.3, 0.3 }      -- out of range / fuera de alcance
 -- Content kinds / Tipos de contenido
 -- Each kind knows how to cast, show and return itself to the cursor.
 -- Cada tipo sabe cómo lanzarse, mostrarse y volver al cursor.
+--   attr(slot)    → secure type, attribute and value / tipo, atributo y valor seguros
+--   icon(slot)    → texture / textura
+--   pickup(slot)  → puts it on the cursor / lo pone en el cursor
+--   tooltip(slot) → fills GameTooltip / llena el GameTooltip
+--   spellID / itemID (optional) → for cooldown, charges, count and range / para cooldown, cargas, cantidad y alcance
+--   label (optional) → name shown on the button / nombre que se ve en el botón
 ---------------------------------------------------------------------------
 local Kinds = {}
 
@@ -108,6 +114,7 @@ local function ResolveAction(action)
 	return nil
 end
 
+-- What the macro casts or uses now: "spell", id or "item", link; nil if nothing / Lo que la macro lanza o usa ahora: "spell", id o "item", enlace; nil si nada
 local function MacroTarget(name)
 	local _, _, body = GetMacroInfo(name)
 	local options = MacroOptions(body)
@@ -313,6 +320,7 @@ function Button:ApplySlot(slot)
 	self:Refresh()
 end
 
+-- Redraws everything on the button / Redibuja todo el botón
 function Button:Refresh()
 	self:UpdateHotkey()
 	self:UpdateIcon()
@@ -332,12 +340,14 @@ function Button:SpellID()
 	return spellID
 end
 
+-- Like SpellID, for items: never a secret value / Como SpellID, para objetos: nunca un valor secreto
 function Button:ItemID()
 	local itemID = self.kind and self.kind.itemID and self.kind.itemID(self.slot)
 	if U.IsSecret(itemID) then return nil end
 	return itemID
 end
 
+-- Icon and macro name; a spell this spec lacks stays grey / Ícono y nombre de macro; un hechizo que esta spec no tiene queda gris
 function Button:UpdateIcon()
 	if not self.kind then
 		self.icon:Hide()
@@ -365,10 +375,12 @@ local QUALITY_ATLASES = {
 	"Professions-Icon-Quality-Tier%d-Inv",
 }
 
+-- Does the client have this texture? / ¿El cliente tiene esta textura?
 local function AtlasExists(atlas)
 	return C_Texture.GetAtlasInfo(atlas) ~= nil
 end
 
+-- The crafting quality badge of an item, or nil / La insignia de calidad de profesión de un objeto, o nil
 function Buttons.QualityAtlas(itemID)
 	local trade = C_TradeSkillUI
 	if not trade then return nil end
@@ -392,6 +404,7 @@ function Buttons.QualityAtlas(itemID)
 	return nil
 end
 
+-- Shows the crafting quality, top left / Muestra la calidad de profesión, arriba a la izquierda
 function Button:UpdateQuality()
 	local itemID = self.slot and (self.slot.kind == "item" or self.slot.kind == "macro") and self:ItemID()
 	local atlas = itemID and Buttons.QualityAtlas(itemID)
@@ -403,6 +416,7 @@ function Button:UpdateQuality()
 	end
 end
 
+-- Hands a Midnight duration object to a cooldown, safely / Pasa un objeto de duración de Midnight a un cooldown, con seguridad
 local function ApplyDuration(cooldown, duration, diagKey)
 	if not duration then
 		U.NoteEmpty(diagKey)
@@ -414,6 +428,7 @@ local function ApplyDuration(cooldown, duration, diagKey)
 	if not ok then cooldown:Clear() end
 end
 
+-- Cooldown and charge recharge of the spell or item / Cooldown y recarga de cargas del hechizo u objeto
 function Button:UpdateCooldown()
 	local spellID, itemID = self:SpellID(), self:ItemID()
 	if spellID and C_Spell.GetSpellCooldownDuration then
@@ -441,6 +456,7 @@ function Button:UpdateCooldown()
 	end
 end
 
+-- Charges of a spell, or how many of an item you carry / Cargas de un hechizo, o cuántos de un objeto llevas
 function Button:UpdateCount()
 	local text = ""
 	local slot = self.slot
@@ -480,6 +496,7 @@ function Button:UpdateCount()
 	end
 end
 
+-- Icon colour: grey unusable, blue no power, red out of range / Color del ícono: gris no se puede, azul sin recurso, rojo fuera de alcance
 function Button:UpdateState()
 	if not self.slot then return end
 	local color = WHITE
@@ -526,6 +543,7 @@ end
 
 local IsOverlayed = C_SpellActivationOverlay and C_SpellActivationOverlay.IsSpellOverlayed or IsSpellOverlayed
 
+-- Proc glow if the spell is lit right now / Brillo de proc si el hechizo está iluminado ahora
 function Button:UpdateGlow()
 	local spellID = self:SpellID()
 	local on = false
@@ -536,10 +554,12 @@ function Button:UpdateGlow()
 	self:SetGlow(on)
 end
 
+-- Turns the proc glow on or off / Enciende o apaga el brillo de proc
 function Button:SetGlow(on)
 	self.glow:SetShown(on and true or false)
 end
 
+-- Is this button's spell (or its override) the given one? / ¿El hechizo de este botón (o su reemplazo) es el indicado?
 function Button:MatchesSpell(spellID)
 	local own = self:SpellID()
 	if not own then return false end
@@ -566,15 +586,17 @@ end
 ---------------------------------------------------------------------------
 local function OnEnter(self)
 	if not self.kind then return end
-	GameTooltip_SetDefaultAnchor(GameTooltip, self)   -- respects tooltip addons / respeta addons de tooltips (D-05)
+	GameTooltip_SetDefaultAnchor(GameTooltip, self)   -- the game's tooltip position / la posición de tooltips del juego (D-05)
 	pcall(self.kind.tooltip, self.slot)
 	GameTooltip:Show()
 end
 
+-- Hides the tooltip / Oculta el tooltip
 local function OnLeave()
 	GameTooltip:Hide()
 end
 
+-- Shift + drag takes the content out / Shift + arrastrar saca el contenido
 local function OnDragStart(self)
 	if InCombatLockdown() or not self.slot then return end
 	-- Taking content out always needs Shift, or Blizzard's "pick up action" modifier if set to another key (D-23).
@@ -583,6 +605,7 @@ local function OnDragStart(self)
 	Buttons:PickUp(self)
 end
 
+-- Dropping something on the button places it / Soltar algo en el botón lo coloca
 local function OnReceiveDrag(self)
 	Buttons:Receive(self)
 end
@@ -607,6 +630,7 @@ local function PreClick(self, button, down)
 	self.receiving = true
 end
 
+-- Restores the action after a click that placed something / Regresa la acción después de un clic que colocó algo
 local function PostClick(self, _, down)
 	if not self.suppressed then return end
 	self.suppressed = nil
@@ -661,6 +685,7 @@ local CLICK_WRAP = [[
 	end
 ]]
 
+-- A new secure button with Blizzard's art, cooldowns and texts / Un botón seguro nuevo con el arte de Blizzard, cooldowns y textos
 local function CreateButton(name, parent)
 	local b = CreateFrame("Button", name, parent, "SecureActionButtonTemplate")
 	Mixin(b, Button)
@@ -841,12 +866,14 @@ function Buttons:Store(b, slot)
 	b:ApplySlot(slot)
 end
 
+-- Takes the content to the cursor and empties the button / Lleva el contenido al cursor y vacía el botón
 function Buttons:PickUp(b)
 	local slot = b.slot
 	self:Store(b, nil)
 	pcall(Kinds[slot.kind].pickup, slot)
 end
 
+-- Places what the cursor holds; the old content goes to the cursor / Coloca lo que tiene el cursor; lo que había pasa al cursor
 function Buttons:Receive(b)
 	if not GetCursorInfo() then return end
 	if InCombatLockdown() then
@@ -881,6 +908,7 @@ function Buttons:ForEachActive(fn)
 	end
 end
 
+-- An event handler that calls these methods on every active button / Un manejador de eventos que llama estos métodos en cada botón activo
 local function Each(...)
 	local methods = { ... }
 	return function()
@@ -913,6 +941,7 @@ ns:On("CURSOR_CHANGED", function()
 	end
 end)
 
+-- Proc glow events: light the buttons that have that spell / Eventos de brillo de proc: iluminan los botones con ese hechizo
 local function OnGlow(on)
 	return function(_, spellID)
 		U.Note("glow", spellID)
@@ -966,12 +995,14 @@ function Button:UpdateMacro()
 	if GameTooltip:IsOwned(self) then OnEnter(self) end
 end
 
+-- Re-reads every macro button / Vuelve a leer cada botón con macro
 local function UpdateMacros()
 	Buttons:ForEachActive(function(b) b:UpdateMacro() end)
 end
 
 ns:On("MODIFIER_STATE_CHANGED", UpdateMacros)
 
+-- Starts the macro check every 0.2 s, once / Inicia la revisión de macros cada 0.2 s, una vez
 function Buttons:StartMacroTimer()
 	if self.macroTimer then return end
 	self.macroTimer = C_Timer.NewTicker(0.2, ns.Log.Wrap(UpdateMacros))

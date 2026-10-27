@@ -80,6 +80,7 @@ local VISIBILITY_DEFAULTS = {
 	showIf = {},         -- { nopet, petdead, stealth, flying, swimming, focus = true }
 }
 
+-- Adds the missing defaults to a table / Agrega a una tabla los valores por defecto que falten
 local function FillTable(target, defaults)
 	for key, value in pairs(defaults) do
 		if target[key] == nil then
@@ -89,6 +90,7 @@ local function FillTable(target, defaults)
 	return target
 end
 
+-- An empty set with the default layout and visibility / Un conjunto vacío con la forma y visibilidad por defecto
 local function NewSet(layout)
 	return {
 		layout = FillTable(layout or {}, LAYOUT_DEFAULTS),
@@ -98,6 +100,7 @@ local function NewSet(layout)
 	}
 end
 
+-- Completes a saved bar with any field newer versions added / Completa una barra guardada con los campos que agregaron versiones nuevas
 local function FillBar(bar)
 	bar.scope = bar.scope or "global"
 	bar.hidden = bar.hidden or false
@@ -322,6 +325,7 @@ local function MigrateTo14(db)
 	end
 end
 
+-- Runs, in order, every migration the saved data still needs / Corre en orden cada migración que aún necesitan los datos guardados
 local function Migrate(db)
 	if db.schemaVersion < 2 then MigrateTo2(db) end
 	if db.schemaVersion < 3 then MigrateTo3(db) end
@@ -453,6 +457,7 @@ end
 local GetSpecIndex = C_SpecializationInfo and C_SpecializationInfo.GetSpecialization or GetSpecialization
 local GetSpecInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
 
+-- The current specialization's ID, or nil / El número de la especialización actual, o nil
 function DB:SpecID()
 	local index = GetSpecIndex and GetSpecIndex()
 	return index and GetSpecInfo(index) or nil
@@ -489,6 +494,7 @@ end
 -- Conjuntos de reemplazo de barras por spec en specs a las que no pertenecen: nunca se guardan (D-54).
 local standIns = setmetatable({}, { __mode = "k" })
 
+-- The bar's set for a key, created from its last one if missing / El conjunto de la barra para una clave, creado desde el último si falta
 local function EnsureSet(bar, key)
 	if not bar.sets[key] then
 		bar.sets[key] = NewSetFrom(bar)
@@ -567,10 +573,12 @@ function DB:SetFor(bar, key)
 	return EnsureSet(bar, key)
 end
 
+-- Shape and position of the active set / Forma y posición del conjunto activo
 function DB:Layout(bar)
 	return self:ActiveSet(bar).layout
 end
 
+-- Situations of the active set / Situaciones del conjunto activo
 function DB:Visibility(bar)
 	return self:ActiveSet(bar).visibility
 end
@@ -622,6 +630,7 @@ local function FreeID(bars)
 	return id, count
 end
 
+-- A new bar with the lowest free number / Una barra nueva con el número libre más bajo
 function DB:CreateBar()
 	local bars = self:Bars()
 	local id = FreeID(bars)
@@ -761,6 +770,7 @@ function DB:CopyBarFrom(source, targetKey)
 	return copy, converted
 end
 
+-- Removes the bar from this character's data / Quita la barra de los datos del personaje
 function DB:DeleteBar(id)
 	self:Bars()[id] = nil
 end
