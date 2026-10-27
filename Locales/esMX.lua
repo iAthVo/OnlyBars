@@ -1,14 +1,18 @@
 --[[
 	OnlyBars · Locales/esMX.lua
-	Spanish strings (default). A missing key falls back to the key itself.
-	Textos en español (idioma base). Si falta una clave, se muestra la clave.
+	Spanish strings, over the English base (Locales/enUS.lua) on Spanish
+	clients (esMX and esES). A key missing here keeps its English text.
+	Textos en español, sobre la base en inglés (Locales/enUS.lua) en clientes
+	en español (esMX y esES). Una clave que falte aquí conserva su texto en inglés.
 	© 2026 iAthVo_Kr
 ]]
 
 local _, ns = ...
 
-local L = setmetatable({}, { __index = function(_, key) return key end })
-ns.L = L
+local locale = GetLocale()
+if locale ~= "esMX" and locale ~= "esES" then return end
+
+local L = ns.L
 
 L.PREFIX = "|cff4fc3f7OnlyBars|r"
 L.LOADED = "v%s cargado. |cffffffff/ob|r abre el panel · |cffffffff/ob ayuda|r muestra los comandos."

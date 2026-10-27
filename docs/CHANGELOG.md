@@ -3,6 +3,17 @@
 Versión **X.Y.Z**: X = cambios grandes · Y = cambios estéticos o de configuración ·
 Z = cambios menores.
 
+## [0.11.0] — 2026-10-27 · build de prueba
+
+**Y**: textos en inglés (D-70).
+
+### Agregado
+- **Inglés** (`Locales/enUS.lua`) como idioma base para cualquier cliente; **español**
+  (`Locales/esMX.lua`) encima en clientes esMX y esES. Los términos siguen los del Modo Edición
+  de Blizzard en cada idioma.
+- **Comandos en inglés**, que funcionan junto a los de español en cualquier cliente: `help`,
+  `keys`, `free`, `lock`, `new`, `delete`, `icons`, `rows`, `empty`, `scope`, `test`, `errors`.
+
 ## [0.10.2] — 2026-10-27 · build de prueba
 
 **Z**: carpetas ordenadas por tema (D-69). Sin cambios de funcionamiento.

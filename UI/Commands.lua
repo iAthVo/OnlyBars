@@ -95,6 +95,17 @@ end
 function commands.errores() ns.Report:Toggle() end
 commands.reporte = commands.errores
 
+-- English names (0.11.0): both languages work on every client.
+-- Nombres en inglés (0.11.0): los dos idiomas funcionan en cualquier cliente.
+local ENGLISH = {
+	help = "ayuda", keys = "teclas", free = "libre", lock = "bloquear", new = "nueva",
+	delete = "borrar", icons = "iconos", rows = "filas", empty = "vacios", scope = "alcance",
+	test = "prueba", errors = "errores", report = "errores",
+}
+for english, spanish in pairs(ENGLISH) do
+	commands[english] = commands[spanish]
+end
+
 SLASH_ONLYBARS1 = "/ob"
 SLASH_ONLYBARS2 = "/onlybars"
 SlashCmdList.ONLYBARS = ns.Log.Wrap(function(msg)
