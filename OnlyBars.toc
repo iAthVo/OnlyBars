@@ -7,6 +7,7 @@
 ## Version: 0.11.0
 ## SavedVariables: OnlyBarsDB
 ## IconTexture: Interface\Icons\INV_Misc_Gear_01
+## X-Curse-Project-ID: 1769762
 
 # Strings: English base, Spanish on Spanish clients / Textos: inglés de base, español en clientes en español
 Locales\enUS.lua

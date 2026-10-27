@@ -1,0 +1,31 @@
+# Publishes OnlyBars when a version tag is pushed (e.g. v0.11.0).
+# The BigWigs packager builds the zip from .pkgmeta and uploads it to CurseForge
+# (X-Curse-Project-ID in the .toc) and as a GitHub release.
+# Publica OnlyBars al subir una etiqueta de versión (ej. v0.11.0).
+# El packager de BigWigs arma el zip según .pkgmeta y lo sube a CurseForge
+# (X-Curse-Project-ID del .toc) y como release de GitHub.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # create the GitHub release / crear el release de GitHub
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # File always named OnlyBars.zip (stable download link); the version goes in the label.
+      # El archivo siempre se llama OnlyBars.zip (enlace de descarga fijo); la versión va en la etiqueta.
+      - uses: BigWigsMods/packager@v2
+        with:
+          args: -n "{package-name}:{package-name}-{project-version}"

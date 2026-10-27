@@ -1,0 +1,16 @@
+package-as: OnlyBars
+
+# What does NOT go in the public package (CurseForge) / Lo que NO va en el paquete público (CurseForge)
+# Kept: code, Locales/, LICENSE, README.md, docs/CHANGELOG.md
+# Se quedan: código, Locales/, LICENSE, README.md, docs/CHANGELOG.md
+ignore:
+  - docs/DISENO.md
+  - docs/PRUEBAS.md
+  - docs/NOTAS_INTERNAS.md
+  - .pkgmeta
+  - .github
+  - .gitignore
+
+manual-changelog:
+  filename: docs/CHANGELOG.md
+  markup-type: markdown
