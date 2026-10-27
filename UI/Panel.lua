@@ -748,9 +748,9 @@ local function Create()
 	return f
 end
 
--- The key assignment notice (Modules/Keybinds.lua) goes over the bottom of the
+-- The key assignment notice (Bars/Keybinds.lua) goes over the bottom of the
 -- right column, above the footer, while the panel is open (0.5.9).
--- El aviso de asignar teclas (Modules/Keybinds.lua) va sobre la parte de abajo
+-- El aviso de asignar teclas (Bars/Keybinds.lua) va sobre la parte de abajo
 -- de la columna derecha, arriba del pie, mientras el panel está abierto (0.5.9).
 function Panel:PlaceKeyBanner(banner)
 	local f = self.frame

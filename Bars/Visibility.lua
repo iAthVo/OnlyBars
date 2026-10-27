@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Modules/Visibility.lua
+	OnlyBars · Bars/Visibility.lua
 	When each bar is shown (D-26), like Blizzard's transmog situations:
 	• Location, specialization and equipment set: checked in Lua out of combat
 	  and handed to the bar as the "ob-allowed" attribute.
@@ -57,8 +57,8 @@ local function ApplyKeys(f, shown)
 		end
 	end
 	f:SetAttribute("ob-keysalways", layout.keysAlways and true or false)
-	-- Keys act on press if Blizzard's option says so (Modules/Buttons.lua).
-	-- Las teclas actúan al presionar si la opción de Blizzard lo dice (Modules/Buttons.lua).
+	-- Keys act on press if Blizzard's option says so (Bars/Buttons.lua).
+	-- Las teclas actúan al presionar si la opción de Blizzard lo dice (Bars/Buttons.lua).
 	f:SetAttribute("ob-keydown", GetCVarBool("ActionButtonUseKeyDown"))
 end
 

@@ -1,10 +1,10 @@
 --[[
-	OnlyBars · Modules/Modes.lua
+	OnlyBars · Layout/Modes.lua
 	Free and locked modes, combat lock and Blizzard's Edit Mode (D-10, D-11, D-18).
-	Free mode shows the Blizzard-style selection (Modules/EditMode.lua).
+	Free mode shows the Blizzard-style selection (Layout/EditMode.lua).
 	Modo libre y bloqueado, bloqueo en combate y Modo Edición de Blizzard (D-10,
 	D-11, D-18). El modo libre muestra la selección al estilo de Blizzard
-	(Modules/EditMode.lua).
+	(Layout/EditMode.lua).
 	© 2026 iAthVo_Kr
 ]]
 

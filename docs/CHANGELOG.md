@@ -3,6 +3,15 @@
 Versión **X.Y.Z**: X = cambios grandes · Y = cambios estéticos o de configuración ·
 Z = cambios menores.
 
+## [0.10.2] — 2026-10-27 · build de prueba
+
+**Z**: carpetas ordenadas por tema (D-69). Sin cambios de funcionamiento.
+
+### Cambiado
+- `Modules/` se divide en **`Bars/`** (Buttons, Bars, Visibility, Keybinds) y **`Layout/`**
+  (Grid, EditMode, Modes). `Commands.lua` pasa de `Core/` a **`UI/`**. El orden de carga en
+  `OnlyBars.toc` sigue esos grupos.
+
 ## [0.10.1] — 2026-10-27 · build de prueba
 
 **Z**: copia en los dos sentidos y letra más nítida (D-67, D-68).

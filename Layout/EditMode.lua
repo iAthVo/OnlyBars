@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Modules/EditMode.lua
+	OnlyBars · Layout/EditMode.lua
 	Blizzard-style selection for OnlyBars bars, used both in Blizzard's Edit Mode
 	and in /ob libre (D-18). Listens to Blizzard, never changes its state (D-11).
 	Selección al estilo de Blizzard para las barras de OnlyBars, en el Modo
@@ -49,8 +49,8 @@ local function OnMouseDown(sel)
 	EditMode:Select(sel.parent)
 end
 
--- The drag is OnlyBars' own, so magnetism pulls live (D-34; Modules/Grid.lua).
--- El arrastre es propio de OnlyBars, así el magnetismo jala en vivo (D-34; Modules/Grid.lua).
+-- The drag is OnlyBars' own, so magnetism pulls live (D-34; Layout/Grid.lua).
+-- El arrastre es propio de OnlyBars, así el magnetismo jala en vivo (D-34; Layout/Grid.lua).
 local function OnDragStart(sel)
 	if InCombatLockdown() then return end
 	EditMode:Select(sel.parent)

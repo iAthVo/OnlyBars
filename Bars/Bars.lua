@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Modules/Bars.lua
+	OnlyBars · Bars/Bars.lua
 	Bar frames: layout, position, create and delete. Shape and position come
 	from the bar's active set, so Per-spec bars can differ per spec (D-20).
 	Marcos de las barras: acomodo, posición, crear y borrar. La forma y la

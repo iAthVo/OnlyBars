@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Core/Commands.lua
+	OnlyBars · UI/Commands.lua
 	/ob and /onlybars: alone it opens the panel; the rest are shortcuts.
 	/ob y /onlybars: solo abre el panel; lo demás son atajos.
 	© 2026 iAthVo_Kr

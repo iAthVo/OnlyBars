@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Modules/Grid.lua
+	OnlyBars · Layout/Grid.lua
 	Where a dropped bar lands:
 	• Magnetism (D-32): an edge or centre within 10 px of another bar (OnlyBars
 	  or Blizzard), the screen edges or the screen centre sticks to it.

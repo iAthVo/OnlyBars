@@ -1,5 +1,5 @@
 --[[
-	OnlyBars · Modules/Buttons.lua
+	OnlyBars · Bars/Buttons.lua
 	The addon's own secure buttons (D-01): content, drag and drop, cooldowns,
 	charges, range, usability and proc glow. Midnight-safe (D-12).
 	Botones seguros propios del addon (D-01): contenido, arrastrar y soltar,

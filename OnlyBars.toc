@@ -4,7 +4,7 @@
 ## Notes-esMX: Barras de acción extra. Nada más.
 ## Notes-esES: Barras de acción extra. Nada más.
 ## Author: iAthVo_Kr
-## Version: 0.10.1
+## Version: 0.10.2
 ## SavedVariables: OnlyBarsDB
 ## IconTexture: Interface\Icons\INV_Misc_Gear_01
 
@@ -19,21 +19,21 @@ Core\DB.lua
 Core\Settings.lua
 Core\Combat.lua
 
-# Bars / Barras
-Modules\Buttons.lua
-Modules\Bars.lua
-Modules\Visibility.lua
-Modules\Grid.lua
-Modules\Keybinds.lua
-Modules\EditMode.lua
-Modules\Modes.lua
+# Bars: buttons, bars, when they show, their keys / Barras: botones, barras, cuándo se ven, sus teclas
+Bars\Buttons.lua
+Bars\Bars.lua
+Bars\Visibility.lua
+Bars\Keybinds.lua
 
-# Interface / Interfaz
+# Layout: grid, Edit Mode, free and locked modes / Acomodo: rejilla, Modo Edición, modos libre y bloqueado
+Layout\Grid.lua
+Layout\EditMode.lua
+Layout\Modes.lua
+
+# Interface: windows and commands / Interfaz: ventanas y comandos
 UI\Style.lua
 UI\Widgets.lua
 UI\Report.lua
 UI\BarDialog.lua
 UI\Panel.lua
-
-# Commands / Comandos
-Core\Commands.lua
+UI\Commands.lua

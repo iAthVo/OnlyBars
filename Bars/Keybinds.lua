@@ -1,10 +1,10 @@
 --[[
-	OnlyBars · Modules/Keybinds.lua
+	OnlyBars · Bars/Keybinds.lua
 	Key assignment mode, like Blizzard's Quick Keybind Mode (D-48 to D-53).
-	The bindings themselves are applied by Modules/Visibility.lua, so they follow
+	The bindings themselves are applied by Bars/Visibility.lua, so they follow
 	the bar's visibility, also in combat (D-52).
 	Modo de asignación de teclas, como el Modo de atajo rápido de Blizzard (D-48
-	a D-53). Las teclas en sí las aplica Modules/Visibility.lua, así siguen la
+	a D-53). Las teclas en sí las aplica Bars/Visibility.lua, así siguen la
 	visibilidad de la barra, también en combate (D-52).
 	© 2026 iAthVo_Kr
 ]]

@@ -104,7 +104,7 @@ L.SET_ROWS = "Número de filas"
 L.SET_SHOW_KEYS = "Mostrar teclas"
 L.SET_KEYS_ALWAYS = "Teclas activas aunque esté oculta"
 
--- Keys (Modules/Keybinds.lua) / Teclas
+-- Keys (Bars/Keybinds.lua) / Teclas
 L.PANEL_KEYS = "Asignar teclas"
 L.PANEL_SAVED = "(%s)"
 L.PANEL_UP = "Subir"
