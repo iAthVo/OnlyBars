@@ -6,6 +6,7 @@ package-as: OnlyBars
 ignore:
   - docs/DISENO.md
   - docs/PRUEBAS.md
+  - docs/BITACORA.md
   - docs/NOTAS_INTERNAS.md
   - .pkgmeta
   - .github
