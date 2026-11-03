@@ -1,5 +1,14 @@
 # OnlyBars — Changelog
 
+## 0.11.2 — 2026-11-02
+
+- 🇲🇽 Corregido: los botones podían quedarse sin responder (ni clic ni tecla) hasta relogear,
+  después de hacer clic con algo en el cursor. Además, si un botón pierde su acción por cualquier
+  motivo, se repara solo al salir de combate.
+- 🇺🇸 Fixed: buttons could stop responding (neither click nor key) until relogging, after clicking
+  with something on the cursor. Also, if a button loses its action for any reason, it repairs
+  itself out of combat.
+
 ## 0.11.1 — 2026-10-27
 
 - 🇲🇽 Descarga más ligera: el paquete ya no incluye capturas de pantalla.

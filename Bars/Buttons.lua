@@ -299,22 +299,34 @@ end
 ---------------------------------------------------------------------------
 local Button = {}
 
+-- The secure type, attribute and value the button's content needs, or nil if empty.
+-- El tipo, atributo y valor seguros que necesita el contenido del botón, o nil si está vacío.
+function Button:ExpectedAction()
+	if not self.slot then return nil end
+	return Kinds[self.slot.kind].attr(self.slot)
+end
+
+-- Writes the action from the button's content (out of combat only). The one
+-- place that sets it, so a click can never leave a button without its action (0.11.2).
+-- Escribe la acción desde el contenido del botón (solo fuera de combate). El
+-- único lugar que la pone, así un clic nunca deja un botón sin su acción (0.11.2).
+function Button:ApplyAction()
+	for _, attribute in ipairs(ACTION_ATTRIBUTES) do
+		self:SetAttribute(attribute, nil)
+	end
+	local actionType, attribute, value = self:ExpectedAction()
+	self:SetAttribute("type", actionType)
+	if actionType then self:SetAttribute(attribute, value) end
+end
+
 -- Out of combat only: changes secure attributes.
 -- Solo fuera de combate: cambia atributos seguros.
 function Button:ApplySlot(slot)
 	if slot and not Kinds[slot.kind] then slot = nil end
-	for _, attribute in ipairs(ACTION_ATTRIBUTES) do
-		self:SetAttribute(attribute, nil)
-	end
-	if slot then
-		local actionType, attribute, value = Kinds[slot.kind].attr(slot)
-		self:SetAttribute("type", actionType)
-		self:SetAttribute(attribute, value)
-	else
-		self:SetAttribute("type", nil)
-	end
 	self.slot = slot
 	self.kind = slot and Kinds[slot.kind]
+	self.suppressed = nil
+	self:ApplyAction()
 	self.hasCharges = nil
 	self.macroKey = nil
 	self:Refresh()
@@ -624,7 +636,10 @@ local function PreClick(self, button, down)
 		return
 	end
 	if InCombatLockdown() or not GetCursorInfo() then return end
-	self.savedType = self:GetAttribute("type")
+	-- No copy of the action is kept: PostClick rewrites it from the content.
+	-- (0.11.2: a copy could be lost and leave the button dead until a relog.)
+	-- No se guarda copia de la acción: PostClick la reescribe desde el contenido.
+	-- (0.11.2: una copia se podía perder y dejar el botón muerto hasta relogear.)
 	self:SetAttribute("type", nil)
 	self.suppressed = true
 	self.receiving = true
@@ -633,8 +648,10 @@ end
 -- Restores the action after a click that placed something / Regresa la acción después de un clic que colocó algo
 local function PostClick(self, _, down)
 	if not self.suppressed then return end
+	-- In combat it waits for Buttons:Heal / En combate espera a Buttons:Heal
+	if InCombatLockdown() then return end
 	self.suppressed = nil
-	self:SetAttribute("type", self.savedType)
+	self:ApplyAction()
 	if self.receiving and not down then
 		Buttons:Receive(self)
 	end
@@ -969,7 +986,45 @@ function Buttons:StartRangeTimer()
 		end
 	end))
 	self:StartMacroTimer()
+	self:StartHealTimer()
 end
+
+---------------------------------------------------------------------------
+-- Self-repair (0.11.2) / Autorreparación (0.11.2)
+-- Out of combat, every button gets back the action its content needs if it
+-- lost it, so a stuck button never needs a relog. A lost type is logged with
+-- what the button had, to find the cause; other differences (a mount name
+-- that loaded late) are fixed silently.
+-- Fuera de combate, cada botón recupera la acción que su contenido necesita si
+-- la perdió, así un botón trabado nunca pide relogear. Un tipo perdido se anota
+-- con lo que tenía el botón, para hallar la causa; otras diferencias (el nombre
+-- de una montura que cargó tarde) se corrigen sin avisar.
+---------------------------------------------------------------------------
+function Buttons:Heal()
+	if InCombatLockdown() then return end
+	for name, b in pairs(self.pool) do
+		if b.bar and b:IsShown() then
+			local actionType, attribute, value = b:ExpectedAction()
+			local current = b:GetAttribute("type")
+			if current ~= actionType or (actionType and b:GetAttribute(attribute) ~= value) then
+				if current ~= actionType then
+					ns.Log:Add(L.LOG_KIND_WARNING, L.LOG_HEALED:format(name, tostring(current),
+						tostring(actionType), b.suppressed and L.REPORT_YES or L.REPORT_NO))
+				end
+				b.suppressed = nil
+				b:ApplyAction()
+			end
+		end
+	end
+end
+
+-- After combat and every 2 s out of combat / Al salir de combate y cada 2 s fuera de combate
+function Buttons:StartHealTimer()
+	if self.healTimer then return end
+	self.healTimer = C_Timer.NewTicker(2, ns.Log.Wrap(function() Buttons:Heal() end))
+end
+
+ns:On("PLAYER_REGEN_ENABLED", function() Buttons:Heal() end)
 
 ---------------------------------------------------------------------------
 -- Live macros (D-46) / Macros en vivo (D-46)
