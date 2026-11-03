@@ -101,6 +101,14 @@ function commands.prueba()
 	ns.Report:Show()
 end
 
+-- /ob estado · state: snapshot of the bars and of what the mouse is over, in the Report window (0.11.3)
+-- /ob estado · state: foto de las barras y de lo que está bajo el mouse, en la ventana de Reporte (0.11.3)
+function commands.estado()
+	ns.Log:CaptureState()
+	ns.Report:Show()
+	ns.Report:Refresh()
+end
+
 -- /ob errores · errors: Report window / ventana de Reporte
 function commands.errores() ns.Report:Toggle() end
 commands.reporte = commands.errores
@@ -110,7 +118,7 @@ commands.reporte = commands.errores
 local ENGLISH = {
 	help = "ayuda", keys = "teclas", free = "libre", lock = "bloquear", new = "nueva",
 	delete = "borrar", icons = "iconos", rows = "filas", empty = "vacios", scope = "alcance",
-	test = "prueba", errors = "errores", report = "errores",
+	test = "prueba", errors = "errores", report = "errores", state = "estado",
 }
 for english, spanish in pairs(ENGLISH) do
 	commands[english] = commands[spanish]

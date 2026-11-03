@@ -1,5 +1,12 @@
 # OnlyBars — Changelog
 
+## 0.11.3 — 2026-11-02
+
+- 🇲🇽 Nuevo `/ob estado`: con el mouse sobre un botón que no responde, muestra en la ventana de
+  Reporte qué le pasa (para reportar fallas).
+- 🇺🇸 New `/ob state`: with the mouse over a button that does not respond, shows in the Report
+  window what is wrong with it (to report bugs).
+
 ## 0.11.2 — 2026-11-02
 
 - 🇲🇽 Corregido: los botones podían quedarse sin responder (ni clic ni tecla) hasta relogear,

@@ -219,6 +219,7 @@ L.DIAG_GLOW_SPELL = "  · se iluminó %s (%d): %s"
 L.DIAG_GLOW_ON_BAR = "estaba en OnlyBars"
 L.DIAG_GLOW_NOT_ON_BAR = "no estaba en OnlyBars"
 L.REPORT_DIAG = "Prueba de Midnight"
+L.REPORT_STATE = "Estado de los botones (/ob estado)"
 L.KIND_SPELL = "hechizo"
 L.KIND_ITEM = "objeto"
 L.KIND_TOY = "juguete"
@@ -245,6 +246,7 @@ L.HELP = {
 	"  |cffffffff/ob teclas|r — modo de asignación de teclas (también con el Modo de atajo rápido de Blizzard)",
 	"  |cffffffff/ob prueba|r — resultado de la prueba de Midnight (en la ventana de Reporte)",
 	"  |cffffffff/ob errores|r — ventana de Reporte para copiar errores",
+	"  |cffffffff/ob estado|r — con el mouse sobre un botón que no responde: muestra qué le pasa",
 	"Arrastra hechizos, objetos, juguetes, macros, monturas, mascotas y conjuntos de equipo a los botones.",
 	"Saca o cambia lo que tiene un botón con Shift + arrastrar.",
 	"En modo libre o en el Modo Edición: arrastra una barra para moverla y haz clic para ajustarla.",

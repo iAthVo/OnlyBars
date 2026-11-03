@@ -235,13 +235,76 @@ function Log:ContentLines()
 end
 
 -- The whole report as copyable text / Todo el reporte como texto copiable
+---------------------------------------------------------------------------
+-- Button state (/ob estado, 0.11.3) / Estado de los botones (/ob estado, 0.11.3)
+-- Taken at the moment of the command, with the mouse over a button that does
+-- not respond: what covers it, its action, and where each of its keys points.
+-- Se toma al dar el comando, con el mouse sobre un botón que no responde: qué
+-- lo tapa, su acción y a dónde apunta cada una de sus teclas.
+---------------------------------------------------------------------------
+local function FrameName(f)
+	if not f then return "-" end
+	return (f.GetDebugName and f:GetDebugName()) or (f.GetName and f:GetName()) or tostring(f)
+end
+
+local function Flag(value)
+	return value and L.REPORT_YES or L.REPORT_NO
+end
+
+function Log:CaptureState()
+	local lines = {}
+	local foci = GetMouseFoci and GetMouseFoci() or { GetMouseFocus and GetMouseFocus() }
+	local under = {}
+	for _, f in ipairs(foci or {}) do under[#under + 1] = FrameName(f) end
+	lines[#lines + 1] = "mouse over: " .. (#under > 0 and table.concat(under, " > ") or "-")
+	lines[#lines + 1] = ("combat %s · free mode %s · keybind mode %s · cursor %s"):format(
+		Flag(InCombatLockdown()), Flag(ns.Modes:IsFree()), Flag(ns.Keybinds:IsActive()), tostring(GetCursorInfo()))
+	local ids = {}
+	for id, f in pairs(ns.Bars.frames) do
+		if f.data then ids[#ids + 1] = id end
+	end
+	table.sort(ids)
+	for _, id in ipairs(ids) do
+		local f = ns.Bars.frames[id]
+		lines[#lines + 1] = ("Bar %d \"%s\" · shown %s · visible %s · alpha %.2f · allowed %s · force %s · state %s · selection %s"):format(
+			id, ns.Bars:Name(f.data), Flag(f:IsShown()), Flag(f:IsVisible()), f:GetAlpha(),
+			tostring(f:GetAttribute("ob-allowed")), tostring(f:GetAttribute("ob-force")),
+			tostring(f:GetAttribute("state-obvis")), Flag(f.selection and f.selection:IsShown()))
+		if f:IsVisible() then
+			local keys = ns.DB:ActiveSet(f.data).keys
+			for i, b in ipairs(f.buttons) do
+				if b:IsShown() and b.slot then
+					local expected = b:ExpectedAction()
+					local key = keys[i]
+					lines[#lines + 1] = ("  %d · type %s (needs %s) · enabled %s · mouse %s · state %s · alpha %.2f · keydown %s · key %s → %s · overlay %s"):format(
+						i, tostring(b:GetAttribute("type")), tostring(expected), Flag(b:IsEnabled()),
+						Flag(b:IsMouseEnabled()), tostring(b:GetButtonState()), b:GetEffectiveAlpha(),
+						tostring(b:GetAttribute("useOnKeyDown")), tostring(key),
+						key and tostring(GetBindingAction(key, true)) or "-",
+						Flag(ns.Keybinds.overlays[b] and ns.Keybinds.overlays[b]:IsShown()))
+				end
+			end
+		end
+	end
+	self.state = lines
+	self.stateTime = date("%H:%M:%S")
+end
+
 function Log:ReportText()
 	local version, build = GetBuildInfo()
 	local out = {
 		("OnlyBars %s · WoW %s (%s) · %s"):format(ns.VERSION, version, build, date("%Y-%m-%d %H:%M")),
 		"",
-		"== " .. L.REPORT_CONTENT .. " ==",
 	}
+	-- /ob estado, when taken / /ob estado, si se tomó
+	if self.state then
+		out[#out + 1] = ("== %s (%s) =="):format(L.REPORT_STATE, self.stateTime)
+		for _, line in ipairs(self.state) do
+			out[#out + 1] = line
+		end
+		out[#out + 1] = ""
+	end
+	out[#out + 1] = "== " .. L.REPORT_CONTENT .. " =="
 	for _, line in ipairs(self:ContentLines()) do
 		out[#out + 1] = line
 	end

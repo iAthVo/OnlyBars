@@ -218,6 +218,7 @@ L.DIAG_GLOW_SPELL = "  · %s (%d) glowed: %s"
 L.DIAG_GLOW_ON_BAR = "it was on OnlyBars"
 L.DIAG_GLOW_NOT_ON_BAR = "it was not on OnlyBars"
 L.REPORT_DIAG = "Midnight check"
+L.REPORT_STATE = "Button state (/ob state)"
 L.KIND_SPELL = "spell"
 L.KIND_ITEM = "item"
 L.KIND_TOY = "toy"
@@ -244,6 +245,7 @@ L.HELP = {
 	"  |cffffffff/ob keys|r — keybind mode (also with Blizzard's Quick Keybind Mode)",
 	"  |cffffffff/ob test|r — Midnight check (in the Report window)",
 	"  |cffffffff/ob errors|r — Report window to copy errors",
+	"  |cffffffff/ob state|r — with the mouse over a button that does not respond: shows what is wrong with it",
 	"Drag spells, items, toys, macros, mounts, pets and equipment sets onto the buttons.",
 	"Take out or swap what a button holds with Shift + drag.",
 	"In free mode or Edit Mode: drag a bar to move it and click it to adjust it.",
