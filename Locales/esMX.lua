@@ -145,7 +145,6 @@ L.SET_ALPHA = "Transparencia"
 L.SET_SHOW_EMPTY = "Mostrar botones vacíos"
 
 -- Bar dialog (UI/BarDialog.lua) / Ventana de la barra
-L.DIALOG_SCOPE = "Alcance: %s (clic para cambiar)"
 L.DIALOG_RESET_POSITION = "Restablecer posición"
 L.DIALOG_MORE = "Más opciones…"
 L.DIALOG_HINT = "Flechas: mover 1 px · Shift + flechas: 10 px"

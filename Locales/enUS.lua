@@ -144,7 +144,6 @@ L.SET_ALPHA = "Opacity"
 L.SET_SHOW_EMPTY = "Show empty buttons"
 
 -- Bar dialog (UI/BarDialog.lua)
-L.DIALOG_SCOPE = "Scope: %s (click to change)"
 L.DIALOG_RESET_POSITION = "Reset position"
 L.DIALOG_MORE = "More options…"
 L.DIALOG_HINT = "Arrows: move 1 px · Shift + arrows: 10 px"

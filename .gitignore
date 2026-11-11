@@ -11,3 +11,6 @@ docs/NOTAS_INTERNAS.md
 Thumbs.db
 desktop.ini
 .vscode/
+
+# Private test suite / Pruebas privadas
+tests/

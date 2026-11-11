@@ -1,5 +1,12 @@
 # OnlyBars — Changelog
 
+## 0.11.4 — 2026-11-04
+
+- 🇲🇽 La ventanita del Modo Edición ya no tiene el botón «Alcance»: General o por spec se elige en
+  el panel, pestaña Mostrar → Especialización.
+- 🇺🇸 The Edit Mode dialog no longer has the "Scope" button: General or per spec is chosen in the
+  panel, Show tab → Specialization.
+
 ## 0.11.3 — 2026-11-02
 
 - 🇲🇽 Nuevo `/ob estado`: con el mouse sobre un botón que no responde, muestra en la ventana de

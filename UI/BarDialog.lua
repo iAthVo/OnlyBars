@@ -41,12 +41,6 @@ local function OnKeyDown(d, key)
 	end
 end
 
--- Scope button: General <-> Per spec / Botón de alcance: General <-> Por spec
-local function OnScopeClick()
-	local data = Dialog.bar and Dialog.bar.data
-	if data then ns.Bars:ToggleScope(data) end
-end
-
 -- Builds the dialog from the shared settings model / Arma la ventana desde el modelo único de ajustes
 local function Create()
 	local d = CreateFrame("Frame", "OnlyBarsBarDialog", UIParent)
@@ -98,11 +92,9 @@ local function Create()
 		end
 	end
 
+	-- No scope button: the panel's Especialización section does it (D-71).
+	-- Sin botón de alcance: lo hace la sección Especialización del panel (D-71).
 	y = y - 10
-	d.scope = W.BlizzardButton(d, "", inner, OnScopeClick)
-	d.scope:SetPoint("TOPLEFT", PAD, y)
-	y = y - 28
-
 	local reset = W.BlizzardButton(d, L.DIALOG_RESET_POSITION, inner, function()
 		if Dialog.bar then ns.Bars:ResetPosition(Dialog.bar) end
 	end)
@@ -154,8 +146,6 @@ function Dialog:Refresh()
 		-- Usable only while the setting it needs is on (D-65) / Usable solo con su ajuste activo (D-65)
 		if row.def.needs then row:SetEnabled(f.layout[row.def.needs] and true or false) end
 	end
-	local scope = f.data.scope == "spec" and L.SCOPE_SPEC or L.SCOPE_GLOBAL
-	self.frame.scope:SetText(L.DIALOG_SCOPE:format(scope))
 end
 
 -- Reloads it only if it is open / La recarga solo si está abierta
