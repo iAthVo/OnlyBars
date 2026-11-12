@@ -8,13 +8,14 @@
 Blizzard**, y que aparecen solo cuando las necesitas: en combate, en una banda, sin mascota, con tu
 spec de PvP… Sin reemplazar tu interfaz ni cambiar las barras del juego.
 
-![Versión](https://img.shields.io/badge/versión-0.11.0-c8a765) ![WoW](https://img.shields.io/badge/WoW-Retail%2012.1.5%20Midnight-1f6feb) ![Licencia](https://img.shields.io/badge/licencia-MIT-2ea043)
+![Versión](https://img.shields.io/badge/versión-1.0.0-c8a765) ![WoW](https://img.shields.io/badge/WoW-Retail%2012.1.5%20Midnight-1f6feb) ![Licencia](https://img.shields.io/badge/licencia-MIT-2ea043)
 
 ## ✨ Lo que hace
 
-- **🧱 Hasta 20 barras extra** por personaje, de 1 a 12 botones, en las filas que quieras.
+- **🧱 Hasta 20 barras extra** por personaje, de 1 a 12 botones, en horizontal o vertical.
 - **🎨 Iguales a las de Blizzard**: mismo arte, mismo tamaño, mismos ajustes del Modo Edición
-  (filas, iconos, tamaño, margen, opacidad).
+  (orientación, filas, iconos, tamaño, margen, opacidad). Al cambiar el tamaño solo se mueve esa
+  barra; las vecinas se recorren en línea recta.
 - **📦 Todo cabe en un botón**: hechizos, objetos, juguetes, macros, monturas, mascotas y
   conjuntos de equipo, con cooldown, cargas, cantidad, calidad de profesión, alcance y brillo de proc.
 - **🔮 Macros en vivo**: el ícono cambia al presionar Shift, Ctrl o Alt, igual que en Blizzard.
@@ -26,9 +27,12 @@ spec de PvP… Sin reemplazar tu interfaz ni cambiar las barras del juego.
 - **🌫️ Al pasar el mouse**: la barra se desvanece hasta la opacidad que elijas y vuelve al pasar el mouse.
 - **⌨️ Teclas**: pasa el mouse sobre un botón y presiona una tecla, o usa el Modo de atajo rápido de
   Blizzard. Dos barras que nunca se ven al mismo tiempo pueden **compartir la misma tecla**.
+  La **lista de teclas** muestra las de OnlyBars y las de Blizzard, y marca las repetidas.
 - **📐 Acomodo fácil**: modo libre o Modo Edición de Blizzard, rejilla, magnetismo con líneas guía, y
   barras que se **anclan** entre sí o a las de Blizzard.
 - **👥 Copiar entre personajes**: pasa barras de un personaje a otro, en los dos sentidos.
+- **📤 Importar / Exportar**: comparte barras con un texto, como los talentos, o guárdalas en una
+  lista que ves en todos tus personajes.
 - **🛡️ Seguro en combate**: botones seguros; lo que no se puede cambiar en combate se aplica al salir.
 
 ## ⌨️ Uso
@@ -41,7 +45,8 @@ spec de PvP… Sin reemplazar tu interfaz ni cambiar las barras del juego.
 | `/ob iconos 9 6` · `/ob filas 9 2` | La Barra 9 con 6 iconos / en 2 filas |
 | `/ob vacios 9` | Mostrar u ocultar los botones vacíos de la Barra 9 |
 | `/ob alcance 9` | Cambiar la Barra 9 entre General y Por spec |
-| `/ob teclas` | Modo de asignar teclas |
+| `/ob teclas` · `/ob listateclas` | Modo de asignar teclas / lista de teclas |
+| `/ob exportar` · `/ob importar` | Compartir barras con un texto |
 | `/ob errores` · `/ob prueba` | Ventana de Reporte para copiar errores / diagnóstico |
 | `/ob ayuda` | Lista de comandos |
 
@@ -71,9 +76,10 @@ replace your interface or touch the game's own bars.
 
 ## ✨ Features
 
-- **🧱 Up to 20 extra bars** per character, 1 to 12 buttons each, in as many rows as you like.
+- **🧱 Up to 20 extra bars** per character, 1 to 12 buttons each, horizontal or vertical.
 - **🎨 Just like Blizzard's**: same art, same size, same Edit Mode settings (rows, icons, size,
-  padding, opacity).
+  padding, opacity, orientation). Resizing moves only that bar; its neighbours shift in a straight
+  line.
 - **📦 Anything fits on a button**: spells, items, toys, macros, mounts, pets and equipment sets, with
   cooldown, charges, count, crafting quality, range and proc glow.
 - **🔮 Live macros**: the icon changes when you hold Shift, Ctrl or Alt, just like Blizzard's.
@@ -84,10 +90,13 @@ replace your interface or touch the game's own bars.
   dead, stealthed, flying, swimming or has a focus.
 - **🌫️ Mouseover**: the bar fades to the opacity you choose and comes back when you hover it.
 - **⌨️ Keybinds**: hover a button and press a key, or use Blizzard's Quick Keybind Mode. Two bars that
-  never show at the same time can **share the same key**.
+  never show at the same time can **share the same key**. The **key list** shows OnlyBars and
+  Blizzard keys and marks repeated ones.
 - **📐 Easy layout**: free mode or Blizzard's Edit Mode, grid, snapping with guide lines, and bars that
   **anchor** to each other or to Blizzard's bars.
 - **👥 Copy between characters**: move bars from one character to another, both ways.
+- **📤 Import / Export**: share bars as a text, like talents, or save them in a list you see on all
+  your characters.
 - **🛡️ Combat-safe**: secure buttons; anything that can't change in combat applies when it ends.
 
 ## ⌨️ Usage
@@ -100,7 +109,8 @@ replace your interface or touch the game's own bars.
 | `/ob icons 9 6` · `/ob rows 9 2` | Bar 9 with 6 icons / in 2 rows |
 | `/ob empty 9` | Show or hide Bar 9's empty buttons |
 | `/ob scope 9` | Switch Bar 9 between General and Per spec |
-| `/ob keys` | Keybind mode |
+| `/ob keys` · `/ob keylist` | Keybind mode / key list |
+| `/ob export` · `/ob import` | Share bars as a text |
 | `/ob errors` · `/ob test` | Report window to copy errors / diagnostics |
 | `/ob help` | Command list |
 

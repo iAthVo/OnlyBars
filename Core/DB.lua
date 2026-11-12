@@ -41,8 +41,12 @@ local SCHEMA_VERSION = 14
 
 -- The same settings and defaults as Blizzard's action bars in Edit Mode (D-39).
 -- Los mismos ajustes y valores iniciales que las barras de Blizzard en el Modo Edición (D-39).
+-- library (D-76) = { { name, date, class, text }, ... }: saved exports, for the whole account.
+-- library (D-76) = { { name, date, class, text }, ... }: exportaciones guardadas, para toda la cuenta.
+
 local LAYOUT_DEFAULTS = {
-	rows = 1,           -- "Número de filas"
+	orientation = "horizontal", -- "Orientación": "horizontal" | "vertical" (D-72)
+	rows = 1,           -- "Número de filas" (columnas en vertical / columns when vertical)
 	buttons = 12,       -- "Número de iconos"
 	iconSize = 1,       -- "Tamaño de los iconos": 1 = 100% = Blizzard's 45 px button
 	spacing = 2,        -- "Margen de iconos": 2-10, like Blizzard
@@ -56,6 +60,8 @@ local LAYOUT_DEFAULTS = {
 	y = 0,              -- screen centre: new bars and "Restablecer posición" (0.9.1) / centro de la pantalla
 }
 DB.LAYOUT_DEFAULTS = LAYOUT_DEFAULTS
+-- VISIBILITY_DEFAULTS too, below: the importer checks pasted values against both (D-76).
+-- VISIBILITY_DEFAULTS también, abajo: el importador revisa los valores pegados con los dos (D-76).
 
 -- Situations, like Blizzard's transmog situations (D-26). Within a category
 -- any marked option is enough; across categories all must hold. An empty
@@ -79,6 +85,7 @@ local VISIBILITY_DEFAULTS = {
 	-- solo cuando se cumple alguna de estas.
 	showIf = {},         -- { nopet, petdead, stealth, flying, swimming, focus = true }
 }
+DB.VISIBILITY_DEFAULTS = VISIBILITY_DEFAULTS
 
 -- Adds the missing defaults to a table / Agrega a una tabla los valores por defecto que falten
 local function FillTable(target, defaults)
@@ -421,6 +428,8 @@ function DB:Init()
 	db.schemaVersion = db.schemaVersion or (db.profiles and 1 or SCHEMA_VERSION)
 	db.settings = db.settings or { locked = true }
 	db.chars = db.chars or {}
+	-- Saved exports, for the whole account (D-76) / Exportaciones guardadas, para toda la cuenta (D-76)
+	db.library = db.library or {}
 	Migrate(db)
 	self.db = db
 end
@@ -628,6 +637,24 @@ local function FreeID(bars)
 	local id = ns.FIRST_BAR
 	while bars[id] do id = id + 1 end
 	return id, count
+end
+
+-- The lowest free number of this character's bars, or nil at the limit (D-76).
+-- El número libre más bajo de las barras de este personaje, o nil en el límite (D-76).
+function DB:FreeID()
+	return (FreeID(self:Bars()))
+end
+
+-- Puts an imported bar under a number, completing its fields; replaces the
+-- bar that had it (D-76).
+-- Pone una barra importada bajo un número, completando sus campos; reemplaza
+-- a la barra que lo tenía (D-76).
+function DB:PutBar(bar, id)
+	bar.id = id
+	FillBar(bar)
+	self:Bars()[id] = bar
+	standIns[bar] = nil
+	return bar
 end
 
 -- A new bar with the lowest free number / Una barra nueva con el número libre más bajo

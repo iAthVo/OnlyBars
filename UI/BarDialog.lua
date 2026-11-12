@@ -81,6 +81,8 @@ local function Create()
 		local row
 		if def.kind == "slider" then
 			row = W.SliderRow(d, def, inner, LABEL_WIDTH, OnChange)
+		elseif def.kind == "cycle" then
+			row = W.Cycle(d, def, inner, OnChange)
 		else
 			row = W.Check(d, def.label, inner, OnChange)
 		end
@@ -141,10 +143,15 @@ function Dialog:Refresh()
 	local f = self.bar
 	if not (self.frame and f and f.data and f.layout) then return end
 	self.frame.title:SetText(ns.Bars:Name(f.data))
+	local vertical = f.layout.orientation == "vertical"
 	for _, row in ipairs(self.frame.rows) do
 		row:Load(f.layout[row.def.key])
 		-- Usable only while the setting it needs is on (D-65) / Usable solo con su ajuste activo (D-65)
 		if row.def.needs then row:SetEnabled(f.layout[row.def.needs] and true or false) end
+		-- Rows are columns when vertical (D-72) / Las filas son columnas en vertical (D-72)
+		if row.def.labelVertical and row.label then
+			row.label:SetText(vertical and row.def.labelVertical or row.def.label)
+		end
 	end
 end
 
@@ -158,5 +165,5 @@ function Dialog:Set(key, value)
 	local f = self.bar
 	if not (f and f.data) or InCombatLockdown() then return end
 	ns.Bars:SetLayout(f.data, key, value, "dialog")
-	if ns.Settings.byKey[key].kind == "check" then self:Refresh() end
+	if ns.Settings.byKey[key].kind ~= "slider" then self:Refresh() end
 end

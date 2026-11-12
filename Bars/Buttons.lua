@@ -359,6 +359,14 @@ function Button:ItemID()
 	return itemID
 end
 
+-- The icon of a saved slot, without a button (key list) / El ícono de una casilla guardada, sin botón (lista de teclas)
+function Buttons.SlotIcon(slot)
+	local kind = slot and Kinds[slot.kind]
+	if not kind then return nil end
+	local ok, texture = pcall(kind.icon, slot)
+	return ok and texture or QUESTION_MARK
+end
+
 -- Icon and macro name; a spell this spec lacks stays grey / Ícono y nombre de macro; un hechizo que esta spec no tiene queda gris
 function Button:UpdateIcon()
 	if not self.kind then

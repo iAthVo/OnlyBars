@@ -484,11 +484,11 @@ function Grid:EndDrag()
 end
 
 ---------------------------------------------------------------------------
--- Pushing joined bars (D-33) / Empujar barras unidas (D-33)
--- When a bar changes size, the OnlyBars bars touching its sides move with
--- that side, in a chain, so they stay joined without overlapping.
--- Cuando una barra cambia de tamaño, las barras de OnlyBars que tocan sus
--- lados se mueven con ese lado, en cadena, así siguen unidas sin encimarse.
+-- Joined bars (D-73, replaces the four-way push of D-33) / Barras unidas (D-73, reemplaza el empuje a los cuatro lados de D-33)
+-- Bars:Resize uses these: which side a bar touches, and moving the bars on one
+-- side in a straight line (right or up only, never diagonal).
+-- Bars:Resize usa estas: qué lado toca una barra, y recorrer las barras de un
+-- lado en línea recta (solo a la derecha o hacia arriba, nunca en diagonal).
 ---------------------------------------------------------------------------
 local TOUCH = 2
 
@@ -512,35 +512,90 @@ local function TouchingSide(r, g)
 	return nil
 end
 
--- Moves every bar touching `rect` on `side`, and the ones touching those, by dx, dy.
--- Mueve cada barra que toca `rect` por `side`, y las que tocan a esas, por dx, dy.
-local function PushSide(rect, side, dx, dy, moved)
-	for _, g in pairs(ns.Bars.frames) do
-		if not moved[g] and g.data and g.layout and g:IsVisible() then
-			local gr = BarRect(g)
-			if gr and TouchingSide(rect, gr) == side then
-				moved[g] = true
-				g.layout.x = U.Round(g.layout.x + dx)
-				g.layout.y = U.Round(g.layout.y + dy)
-				ns.Bars:Place(g)
-				PushSide(gr, side, dx, dy, moved)
+-- The bars touching `rect` on `side`, and the ones touching those (their rects,
+-- measured before anything moves). skip: bars to leave out.
+-- Las barras que tocan `rect` por `side`, y las que tocan a esas (sus
+-- rectángulos, medidos antes de mover nada). skip: barras que no se cuentan.
+local function Chain(rect, side, skip)
+	local found, seen = {}, {}
+	for g in pairs(skip or {}) do seen[g] = true end
+	local queue, i = { rect }, 1
+	while queue[i] do
+		for _, g in pairs(ns.Bars.frames) do
+			if not seen[g] and g.data and g.layout and g:IsVisible() then
+				local gr = BarRect(g)
+				if gr and TouchingSide(queue[i], gr) == side then
+					seen[g] = true
+					found[#found + 1] = gr
+					queue[#queue + 1] = gr
+				end
 			end
 		end
+		i = i + 1
+	end
+	return found
+end
+
+-- Is f anchored, directly or along a chain, to one of the bars in `set`?
+-- ¿Está f anclada, directa o en cadena, a una de las barras de `set`?
+local function FollowsAny(f, set)
+	local seen = 0
+	local anchor = f.layout and f.layout.anchor
+	while anchor and seen < ns.MAX_BARS do
+		local id = tonumber(anchor.to:match("^ob:(%d+)$") or "")
+		local parent = id and ns.Bars.frames[id]
+		if not parent then return false end
+		if set[parent] then return true end
+		anchor = parent.layout and parent.layout.anchor
+		seen = seen + 1
+	end
+	return false
+end
+
+-- Moves every bar touching `rect` on `side`, and the ones touching those, by dx, dy.
+-- A bar anchored to one of them just follows it. A bar anchored elsewhere
+-- moves its anchor, and keeps it only while it still joins its bar (D-73).
+-- Mueve cada barra que toca `rect` por `side`, y las que tocan a esas, por dx, dy.
+-- Una barra anclada a una de ellas solo la sigue. Una anclada a otra parte
+-- mueve su anclaje, y lo conserva solo si sigue unida a su barra (D-73).
+-- Moves one bar by dx, dy: an anchored bar moves its anchor and keeps it only
+-- while it still joins its bar.
+-- Mueve una barra dx, dy: una barra anclada mueve su anclaje y lo conserva solo
+-- si sigue unida a su barra.
+local function MoveBar(g, dx, dy)
+	-- Exact and one axis only: rounding the other axis moved bars half a pixel diagonally (D-73).
+	-- Exacto y en un solo eje: redondear el otro eje movía barras medio píxel en diagonal (D-73).
+	local anchor = g.layout.anchor
+	if anchor then
+		local old = CopyTable(anchor)
+		anchor.dx, anchor.dy = anchor.dx + dx, anchor.dy + dy
+		ns.Bars:Place(g)
+		ns.Bars:KeepAnchor(g, old)
+	else
+		g.layout.x = g.layout.x + dx
+		g.layout.y = g.layout.y + dy
+		ns.Bars:Place(g)
 	end
 end
 
--- before: the bar's rect before the change (Grid.Rect). Out of combat only.
--- before: el rectángulo de la barra antes del cambio (Grid.Rect). Solo fuera de combate.
-function Grid:Push(f, before)
-	if not before or InCombatLockdown() then return end
-	local after = Rect(f)
-	if not after then return end
-	local moved = { [f] = true }
-	PushSide(before, "right", after.right - before.right, 0, moved)
-	PushSide(before, "left", after.left - before.left, 0, moved)
-	PushSide(before, "top", 0, after.top - before.top, moved)
-	PushSide(before, "bottom", 0, after.bottom - before.bottom, moved)
+local function PushSide(rect, side, dx, dy, moved)
+	if dx == 0 and dy == 0 then return end
+	local chain, set = Chain(rect, side, moved), {}
+	for _, r in ipairs(chain) do
+		set[r.frame], moved[r.frame] = true, true
+	end
+	for _, r in ipairs(chain) do
+		if not FollowsAny(r.frame, set) then MoveBar(r.frame, dx, dy) end
+	end
 end
+
+Grid.TouchingSide = TouchingSide
+Grid.Chain = Chain
+Grid.FollowsAny = FollowsAny
+Grid.MoveBar = MoveBar
+Grid.TOUCH = TOUCH
+-- Out of combat only / Solo fuera de combate
+Grid.Shift = PushSide
 
 -- Redraw if the screen size or UI scale changes / Redibujar si cambia el tamaño de pantalla o la escala
 local function Redraw()

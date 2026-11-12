@@ -224,9 +224,11 @@ local function Differ(a, b)
 end
 
 -- Can these two bars be active at the same time? (D-59) / ¿Pueden estas dos barras estar activas al mismo tiempo? (D-59)
-function Visibility:CanOverlap(da, db)
+-- sa, sb: the sets to compare; the active ones by default (the key list compares other specs too).
+-- sa, sb: los conjuntos a comparar; los activos por defecto (la lista de teclas compara otras specs también).
+function Visibility:CanOverlap(da, db, sa, sb)
 	if da.hidden or db.hidden then return false end
-	local sa, sb = ns.DB:ActiveSet(da), ns.DB:ActiveSet(db)
+	sa, sb = sa or ns.DB:ActiveSet(da), sb or ns.DB:ActiveSet(db)
 	-- Keys that stay on while hidden are always active (D-52).
 	-- Las teclas activas aunque esté oculta siempre están activas (D-52).
 	if sa.layout.keysAlways or sb.layout.keysAlways then return true end

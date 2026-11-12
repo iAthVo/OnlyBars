@@ -30,11 +30,15 @@ end
 Settings.BASE_SIZE = 45
 
 -- The same list as Blizzard's action bar settings in Edit Mode, in its order (D-39).
--- kind: "slider" | "check" · key: field of set.layout (DB.lua)
+-- kind: "slider" | "check" | "cycle" · key: field of set.layout (DB.lua)
 -- La misma lista que los ajustes de barra de Blizzard en el Modo Edición, en su orden (D-39).
--- kind: "slider" | "check" · key: campo de set.layout (DB.lua)
+-- kind: "slider" | "check" | "cycle" · key: campo de set.layout (DB.lua)
 Settings.LAYOUT = {
-	{ kind = "slider", key = "rows", label = L.SET_ROWS, min = 1, max = 12, step = 1, format = Plain },
+	-- Orientation first, like Blizzard; vertical renames rows to columns (D-72).
+	-- La orientación primero, como Blizzard; en vertical las filas pasan a columnas (D-72).
+	{ kind = "cycle", key = "orientation", label = L.SET_ORIENTATION,
+		options = { { "horizontal", L.ORIENT_HORIZONTAL }, { "vertical", L.ORIENT_VERTICAL } } },
+	{ kind = "slider", key = "rows", label = L.SET_ROWS, labelVertical = L.SET_COLUMNS, min = 1, max = 12, step = 1, format = Plain },
 	{ kind = "slider", key = "buttons", label = L.SET_BUTTONS, min = 1, max = 12, step = 1, format = Plain },
 	{ kind = "slider", key = "iconSize", label = L.SET_ICON_SIZE, min = 0.5, max = 2, step = 0.1, format = Percent },
 	{ kind = "slider", key = "spacing", label = L.SET_SPACING, min = 2, max = 10, step = 1, format = Plain },

@@ -42,6 +42,11 @@ end
 function commands.panel() ns.Panel:Show() end
 -- /ob teclas · keys: key assignment mode / modo de asignar teclas
 function commands.teclas() ns.Keybinds:Toggle() end
+-- /ob listateclas · keylist: key list (D-75) / lista de teclas (D-75)
+function commands.listateclas() ns.KeyList:Toggle() end
+-- /ob exportar · export  —  /ob importar · import (D-76)
+function commands.exportar() ns.TransferWindow:Toggle("export") end
+function commands.importar() ns.TransferWindow:Toggle("import") end
 
 -- /ob libre · free  —  /ob bloquear · lock
 function commands.libre() ns.Modes:SetFree(true) end
@@ -118,7 +123,8 @@ commands.reporte = commands.errores
 local ENGLISH = {
 	help = "ayuda", keys = "teclas", free = "libre", lock = "bloquear", new = "nueva",
 	delete = "borrar", icons = "iconos", rows = "filas", empty = "vacios", scope = "alcance",
-	test = "prueba", errors = "errores", report = "errores", state = "estado",
+	test = "prueba", errors = "errores", report = "errores", state = "estado", keylist = "listateclas",
+	export = "exportar", import = "importar",
 }
 for english, spanish in pairs(ENGLISH) do
 	commands[english] = commands[spanish]

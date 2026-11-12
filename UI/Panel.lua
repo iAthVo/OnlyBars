@@ -42,6 +42,8 @@ local function SortedBars(bars)
 	return list
 end
 
+Panel.SortedBars = SortedBars
+
 -- Moves the selected bar one place up (-1) or down (+1) in the list (D-56).
 -- Mueve la barra elegida un lugar arriba (-1) o abajo (+1) en la lista (D-56).
 local function MoveSelected(delta)
@@ -110,6 +112,7 @@ local function Short(name)
 	end
 	return table.concat(letters)
 end
+Panel.Short = Short
 
 -- Any spec's name, also of another class (D-67) / El nombre de cualquier spec, también de otra clase (D-67)
 local function SpecName(id)
@@ -237,19 +240,28 @@ local function CreateList(f)
 		ns.Bars:Create()
 		Panel:Select(NewID(before) or Panel.selectedID)
 	end)
-	Action(L.PANEL_DUPLICATE, 100, function()
+	-- Duplicate and Delete side by side (0.14.0) / Duplicar y Borrar lado a lado (0.14.0)
+	local duplicate = Action(L.PANEL_DUPLICATE, 100, function()
 		local data = Panel:Selected()
 		if not data then return end
 		local before = IDs()
 		ns.Bars:Duplicate(data)
 		Panel:Select(NewID(before) or data.id)
 	end)
-	Action(L.PANEL_DELETE, 72, function()
+	duplicate:SetWidth(half)
+	local delete = W.FlatButton(f, L.PANEL_DELETE, half, function()
 		local data = Panel:Selected()
 		if data then StaticPopup_Show("ONLYBARS_DELETE_BAR", ns.Bars:Name(data), nil, data.id) end
 	end)
+	delete:SetPoint("LEFT", duplicate, "RIGHT", 6, 0)
+	-- Import / Export (D-76)
+	Action(L.PANEL_TRANSFER, 72, function() ns.TransferWindow:Toggle() end)
 	-- Key assignment mode (D-51) / Modo de asignación de teclas (D-51)
-	Action(L.PANEL_KEYS, 44, function() ns.Keybinds:Toggle() end)
+	local keys = Action(L.PANEL_KEYS, 44, function() ns.Keybinds:Toggle() end)
+	keys:SetWidth(half)
+	-- Key list (D-75), next to it / Lista de teclas (D-75), a su lado
+	local keyList = W.FlatButton(f, L.PANEL_KEYLIST, half, function() ns.KeyList:Toggle() end)
+	keyList:SetPoint("LEFT", keys, "RIGHT", 6, 0)
 end
 
 ---------------------------------------------------------------------------
@@ -318,12 +330,15 @@ local function CreateShapeTab(f)
 			local data = Panel:Selected()
 			if not data then return end
 			ns.Bars:SetLayout(data, def.key, value, "panel")
-			-- A check can enable other rows ("needs") / Una casilla puede habilitar otras filas ("needs")
-			if def.kind == "check" then Panel:Refresh() end
+			-- A check can enable other rows ("needs"); the orientation renames rows (D-72).
+			-- Una casilla puede habilitar otras filas ("needs"); la orientación renombra las filas (D-72).
+			if def.kind ~= "slider" then Panel:Refresh() end
 		end
 		local row
 		if def.kind == "slider" then
 			row = W.SliderRow(tab, def, 440, 150, OnChange)
+		elseif def.kind == "cycle" then
+			row = W.Cycle(tab, def, 290, OnChange)
 		else
 			row = W.Check(tab, def.label, 440, OnChange)
 		end
@@ -808,9 +823,14 @@ end
 -- Loads the Layout tab from the shown set / Carga la pestaña Forma desde el conjunto mostrado
 function Panel:RefreshShape(f, data)
 	local layout = self:EditedSet(data).layout
+	local vertical = layout.orientation == "vertical"
 	for _, row in ipairs(f.shapeRows) do
 		row:Load(layout[row.def.key])
 		if row.def.needs then row:SetEnabled(layout[row.def.needs] and true or false) end
+		-- Rows are columns when vertical (D-72) / Las filas son columnas en vertical (D-72)
+		if row.def.labelVertical and row.label then
+			row.label:SetText(vertical and row.def.labelVertical or row.def.label)
+		end
 	end
 end
 

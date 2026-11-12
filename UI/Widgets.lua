@@ -39,6 +39,7 @@ function W.SliderRow(parent, def, width, labelWidth, onChange)
 	label:SetWidth(labelWidth)
 	label:SetJustifyH("LEFT")
 	label:SetText(def.label)
+	row.label = label   -- can be renamed later, e.g. rows → columns (D-72) / se puede renombrar, ej. filas → columnas (D-72)
 
 	slider:SetParent(row)
 	slider:SetPoint("LEFT", label, "RIGHT", 4, 0)

@@ -117,6 +117,7 @@ end
 local function Refresh(f)
 	ns.Combat:Run("visibility", function() ns.Visibility:Apply(f) end, true)
 	for _, b in ipairs(f.buttons) do b:UpdateHotkey() end
+	if ns.KeyList then ns.KeyList:RefreshIfShown() end
 end
 
 -- Saves the key on the button / Guarda la tecla en el botón

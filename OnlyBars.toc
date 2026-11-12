@@ -4,7 +4,7 @@
 ## Notes-esMX: Barras de acción extra. Nada más.
 ## Notes-esES: Barras de acción extra. Nada más.
 ## Author: iAthVo_Kr
-## Version: 0.11.4
+## Version: 1.0.0
 ## SavedVariables: OnlyBarsDB
 ## IconTexture: Interface\Icons\INV_Misc_Gear_01
 ## X-Curse-Project-ID: 1769762
@@ -16,6 +16,7 @@ Locales\esMX.lua
 # Core / Núcleo
 Core\Init.lua
 Core\Util.lua
+Core\Serialize.lua
 Core\Log.lua
 Core\DB.lua
 Core\Settings.lua
@@ -26,6 +27,7 @@ Bars\Buttons.lua
 Bars\Bars.lua
 Bars\Visibility.lua
 Bars\Keybinds.lua
+Bars\Transfer.lua
 
 # Layout: grid, Edit Mode, free and locked modes / Acomodo: rejilla, Modo Edición, modos libre y bloqueado
 Layout\Grid.lua
@@ -38,4 +40,6 @@ UI\Widgets.lua
 UI\Report.lua
 UI\BarDialog.lua
 UI\Panel.lua
+UI\KeyList.lua
+UI\TransferWindow.lua
 UI\Commands.lua
